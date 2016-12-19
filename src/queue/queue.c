@@ -18,7 +18,7 @@ KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, Collection
 		case KeyedFibonacciPriorityQueue:
 			queue->push   = &FibonacciKPQ_push;
 			queue->peek   = &FibonacciKPQ_peek;
-			queue->pop    = &FibinacciKPQ_pop;
+			queue->pop    = &FibonacciKPQ_pop;
 			queue->isEmpty= &__KPQ_Priv0Null;
 			queue->clear  = &FibonacciKPQ_clear;
 			queue->release= &FibonacciKPQ_release;
@@ -45,7 +45,7 @@ RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, C
 		case RelativeFibonacciPriorityQueue:
 			queue->push   = &FibonacciRPQ_push;
 			queue->peek   = &FibonacciRPQ_peek;
-			queue->pop    = &FibinacciRPQ_pop;
+			queue->pop    = &FibonacciRPQ_pop;
 			queue->isEmpty= &__RPQ_Priv0Null;
 			queue->clear  = &FibonacciRPQ_clear;
 			queue->release= &FibonacciRPQ_release;
