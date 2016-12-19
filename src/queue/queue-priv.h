@@ -4,6 +4,50 @@
 #ifndef __LIBCOLLECTIONS_QUEUE_PRIV_H
 #define __LIBCOLLECTIONS_QUEUE_PRIV_H
 
+typedef struct PairingRPQNode {
+	struct PairingKPQNode* sibiling;
+	struct PairingKPQNode* child;
+	void* value;
+} PairingRPQNode;
+
+typedef struct PairingKPQNode {
+	struct PairingKPQNode* sibiling;
+	struct PairingKPQNode* child;
+	unsigned int key;
+	void* value;
+} PairingKPQNode;
+
+typedef struct FibonacciRPQNode {
+	struct FibonacciRPQNode* parent;
+	struct FibonacciRPQNode* left;
+	struct FibonacciRPQNode* right;
+	struct FibonacciRPQNode* child;
+	void* value;
+	size_t degree;
+	bool marked;
+} FibonacciRPQNode;
+
+typedef struct FibonacciKPQNode {
+	struct FibonacciKPQNode* parent;
+	struct FibonacciKPQNode* left;
+	struct FibonacciKPQNode* right;
+	struct FibonacciKPQNode* child;
+	unsigned int key;
+	void* value;
+	size_t degree;
+	bool marked;
+} FibonacciKPQNode;
+
+union RelativePriorityQueueData {
+	PairingRPQNode* pairingRoot;
+	FibonacciRPQNode* fibonacciRoot;
+};
+
+union KeyedPriorityQueueData {
+	PairingKPQNode* pairingRoot;
+	FibonacciKPQNode* fibonacciRoot;
+};
+
 LIBCOLLECTIONS_LOCAL bool __RPQ_Priv0Null(RelativePriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL bool __KPQ_Priv0Null(KeyedPriorityQueue* queue);
 
