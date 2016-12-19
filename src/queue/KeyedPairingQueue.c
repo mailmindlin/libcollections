@@ -14,15 +14,11 @@ static PairingKPQNode* doMerge(PairingKPQNode* treeA, PairingKPQNode* treeB) {
 	
 	if (treeA->key > treeB->key) {
 		//Attach treeA as child of treeB
-		treeB->parent = treeA->parent;
-		treeA->parent = treeB;
 		treeA->sibiling = treeB->child;
-		//?
 		treeB->child = treeA;
 		return treeB;
 	} else {
 		//Attach treeB as child of treeA
-		treeB->parent = treeA;
 		treeA->sibiling = treeB->sibiling;
 		treeB->sibiling = treeA->child;
 		treeA->child = treeB;
