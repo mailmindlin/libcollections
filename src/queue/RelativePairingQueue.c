@@ -105,14 +105,14 @@ static void doReleaseNode(PriorityQueueNode* node, Cleaner* cleaner) {
 	}
 }
 
-void* PairingRPQ_peek(RelativePriorityQueue* queue) __attribute__((const, nonnull(1))) {
+void* PairingRPQ_peek(RelativePriorityQueue* queue) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return NULL;
 	return ((PriorityQueueNode*)queue->priv[0])->value;
 }
 
-void* PairingRPQ_pop(RelativePriorityQueue* queue) __attribute__((const, nonnull(1))) {
+void* PairingRPQ_pop(RelativePriorityQueue* queue) {
 	PriorityQueueNode* oldRoot = ((PriorityQueueNode*)queue->priv[0]);
 	if (oldRoot == NULL)
 		//Underflow
@@ -124,7 +124,7 @@ void* PairingRPQ_pop(RelativePriorityQueue* queue) __attribute__((const, nonnull
 	return result;
 }
 
-bool PairingRPQ_push(RelativePriorityQueue* queue, void* value) __attribute__((const, nonnull(1))) {
+bool PairingRPQ_push(RelativePriorityQueue* queue, void* value) {
 	PriorityQueueNode* node = malloc(sizeof(PriorityQueueNode));
 	if (node == NULL)
 		return false;
@@ -138,11 +138,11 @@ bool PairingRPQ_push(RelativePriorityQueue* queue, void* value) __attribute__((c
 	return true;
 }
 
-void PairingRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
+void PairingRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner) {
 	PriorityQueueNode* root = ((PriorityQueueNode*)queue->priv[0]);
 	doReleaseNode(root, cleaner);
 }
 
-void PairingRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
+void PairingRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner) {
 	PairingRPQ_clear(queue, cleaner);
 }
