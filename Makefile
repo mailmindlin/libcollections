@@ -4,7 +4,7 @@ rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst 
 
 CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
 CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -flto -I. -Os -ggdb
-LDFLAGS += -lm -lc -shared -flto=3
+LDFLAGS += -lm -lc -shared
 
 SRC := $(call rwildcard, ./src/, *.c)
 OBJ := $(patsubst %.c,%.o, $(SRC))
