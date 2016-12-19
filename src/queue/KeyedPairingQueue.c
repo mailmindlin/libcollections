@@ -1,5 +1,8 @@
+#include <stddef.h>	//For NULL
+#include <stdlib.h>	//For malloc, free
 #include "queue.h"
 #include "queue-priv.h"
+
 //Pairing heap implementation
 //see https://users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp, https://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
 struct PriorityQueueNode_s;
