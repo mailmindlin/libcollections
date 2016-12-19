@@ -99,7 +99,7 @@ static void doReleaseNode(PriorityQueueNode* node, Cleaner* cleaner) {
 		current = sibiling;
 		if (child != NULL) {
 			if (current != NULL)
-				doReleaseNode(child);
+				doReleaseNode(child, cleaner);
 			else
 				current = child;
 		}
