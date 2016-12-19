@@ -4,13 +4,13 @@
 //see https://users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp, https://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
 struct PriorityQueueNode_s;
 typedef struct PriorityQueueNode_s PriorityQueueNode;
-struct {
+struct PriorityQueueNode_s {
 	PriorityQueueNode* parent;
 	PriorityQueueNode* child;
 	PriorityQueueNode* sibiling;
 	unsigned int key;
 	void *value;
-} PriorityQueueNode_s;
+};
 
 static PriorityQueueNode* doMerge(PriorityQueueNode* treeA, PriorityQueueNode* treeB) {
 	if (treeA == NULL)
