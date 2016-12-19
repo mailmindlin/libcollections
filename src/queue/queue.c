@@ -1,3 +1,5 @@
+#include <stddef.h>	//For NULL
+#include <string.h>	//For memset
 #include "queue.h"
 #include "queue-priv.h"
 
