@@ -11,6 +11,10 @@ struct Queue_s;
 struct RelativePriorityQueue_s;
 struct KeyedPriorityQueue_s;
 
+union QueueData {};
+union KeyedPriorityQueueData;
+union RelativePriorityQueueData;
+
 typedef struct Queue_s Queue;
 typedef struct RelativePriorityQueue_s RelativePriorityQueue;
 typedef struct KeyedPriorityQueue_s KeyedPriorityQueue;
@@ -23,7 +27,7 @@ struct Queue_s {
 	void (*clear) (Queue* queue, Cleaner* cleaner);
 	void (*release) (Queue* queue, Cleaner* cleaner);
 	CollectionType type;
-	void* priv[sizeof(void*) * 4];//Implementation-specific data
+	union QueueData priv; //Implementation-specific data
 };
 
 struct RelativePriorityQueue_s {
@@ -35,7 +39,7 @@ struct RelativePriorityQueue_s {
 	void (*release) (RelativePriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
 	Comparator* comparator;
-	void* priv[sizeof(void*) * 4];//Implementation-specific data
+	union KeyedPriorityQueueData priv; //Implementation-specific data
 };
 
 struct KeyedPriorityQueue_s {
@@ -47,7 +51,7 @@ struct KeyedPriorityQueue_s {
 	void (*clear) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	void (*release) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
-	void* priv[sizeof(void*) * 4];//Implementation-specific data
+	union RelativePriorityQueueData priv; //Implementation-specific data
 };
 
 Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
