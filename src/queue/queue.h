@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "../collections.h"
+#include "../locality.h"
 #ifndef __LIBCOLLECTIONS_QUEUE_H
 #define __LIBCOLLECTIONS_QUEUE_H
 
@@ -10,9 +11,9 @@ struct Queue_s;
 struct RelativePriorityQueue_s;
 struct KeyedPriorityQueue_s;
 
-typedef struct Queue_s Queue;
-typedef struct RelativePriorityQueue_s RelativePriorityQueue;
-typedef struct KeyedPriorityQueue_s KeyedPriorityQueue;
+LIBCOLLECTIONS_PUBLIC typedef struct Queue_s Queue;
+LIBCOLLECTIONS_PUBLIC typedef struct RelativePriorityQueue_s RelativePriorityQueue;
+LIBCOLLECTIONS_PUBLIC typedef struct KeyedPriorityQueue_s KeyedPriorityQueue;
 
 struct Queue_s {
 	bool (*push) (Queue* queue, void* value);
@@ -49,8 +50,8 @@ struct KeyedPriorityQueue_s {
 	unsigned char priv[sizeof(void*) * 4];//Implementation-specific data
 };
 
-LIBCOLLECTIONS_PUBLIC Queue* InitQueue(Queue* queue, CollectionType type);
-LIBCOLLECTIONS_PUBLIC RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, CollectionType type, Comparator* comparator);
-LIBCOLLECTIONS_PUBLIC KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type);
+Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
+RelativePriorityQueue* LIBCOLLECTIONS_PUBLIC InitRelativePriorityQueue(RelativePriorityQueue* queue, CollectionType type, Comparator* comparator);
+KeyedPriorityQueue* LIBCOLLECTIONS_PUBLIC InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type);
 
 #endif
