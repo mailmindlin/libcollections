@@ -14,5 +14,5 @@ LIB = $(LIB_NAME).so
 all: $(LIB)
 
 $(LIB): $(OBJ)
-	$(CC) $(LDFLAGS) -Wl,-soname.,$(LIB) $(OBJ) -o $(LIB)
+	$(CC) $(LDFLAGS) -Wl,-soname,$(LIB) $(OBJ) -o $(LIB)
 
