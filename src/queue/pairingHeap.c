@@ -1,4 +1,5 @@
 #include "queue.h"
+#include "queue-priv.h"
 //Pairing heap implementation
 //see https://users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp, https://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
 struct PriorityQueueNode_s;
@@ -84,46 +85,32 @@ static PriorityQueueNode* combineSibilings(PriorityQueueNode* firstSibiling) {
 	return lastPair;
 }
 
-bool PriorityQueue_init(RelativePriorityQueue* queue) __attribute((nonnull(1)) {
-	queue->priv[0] = NULL;
-	return true;
-}
-
-PriorityQueue* PriorityQueue_alloc() __attribute__((malloc)) {
-	PriorityQueue* result = malloc(sizeof(PriorityQueue));
-	if (result == NULL)
-		//Malloc error
-		return NULL;
-	if (!PriorityQueue_init(result)) {
-		free(result);
-		return NULL;
-	}
-	return result;
-}
-unsigned int PriorityQueue_findMinimumKey(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
-	if (queue->root == NULL)
+unsigned int PairingKPQ_peekKey(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
+	if (queue->priv[0] == NULL)
 		//Underflow
 		return 0;
-	return queue->root->key;
+	return ((PriorityQueueNode*)queue->priv[0])->key;
 }
-void* PriorityQueue_findMinimumValue(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
-	if (queue->root == NULL)
+
+void* PairingKPQ_peek(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
+	if (queue->priv[0] == NULL)
 		//Underflow
 		return NULL;
-	return queue->root->value;
+	return ((PriorityQueueNode*)queue->priv[0])->value;
 }
-void* PriorityQueue_deleteMinimum(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
-	if (queue->root == NULL)
+
+void* PairingKPQ_pop(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
+	PriorityQueueNode* oldRoot = ((PriorityQueueNode*)queue->priv[0]);
+	if (oldRoot == NULL)
 		//Underflow
 		return NULL;
-	PriorityQueueNode* oldRoot = queue->root;
-	void* result = queue->root->value;
-	PriorityQueueNode* firstChild = queue->root->child;
-	free(queue->root);
-	queue->root = combineSibilings(firstChild);
+	void* result = oldRoot->value;
+	PriorityQueueNode* firstChild = oldRoot->child;
+	free(oldRoot);
+	((PriorityQueueNode*)queue->priv[0]) = combineSibilings(firstChild);
 	return result;
 }
-bool PriorityQueue_insert(PriorityQueue* queue, unsigned int key, void* value) __attribute__((const, nonnull(1))) {
+bool PairingKPQ_push(PriorityQueue* queue, unsigned int key, void* value) __attribute__((const, nonnull(1))) {
 	PriorityQueueNode* node = malloc(sizeof(PriorityQueueNode));
 	if (node == NULL)
 		return false;
@@ -132,16 +119,15 @@ bool PriorityQueue_insert(PriorityQueue* queue, unsigned int key, void* value) _
 	node->sibiling = NULL;
 	node->key = key;
 	node->value = value;
-	queue->root = doMerge(queue->root, node);
+	((PriorityQueueNode*)queue->priv[0]) = doMerge(queue->root, node);
 	return true;
 }
-bool PriorityQueue_isEmpty(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
-	return queue->root == NULL;
-}
-void PriorityQueue_deleteAll(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
+
+void PairingKPQ_clear(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
 	
 }
-void PriorityQueue_release(PriorityQueue* queue) __attribute__((const, nonnull(1)) {
-	PriorityQueue_deleteAll(queue);
+
+void PairingKPQ_release(PriorityQueue* queue) __attribute__((const, nonnull(1)) {
+	PairingKPQ_clear(queue);
 	free(queue);
 }
