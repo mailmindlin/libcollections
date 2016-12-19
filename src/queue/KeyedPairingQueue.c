@@ -106,21 +106,21 @@ static void doReleaseNode(PriorityQueueNode* node, Cleaner* cleaner) {
 	}
 }
 
-unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
+unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return 0;
 	return ((PriorityQueueNode*)queue->priv[0])->key;
 }
 
-void* PairingKPQ_peek(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
+void* PairingKPQ_peek(KeyedPriorityQueue* queue) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return NULL;
 	return ((PriorityQueueNode*)queue->priv[0])->value;
 }
 
-void* PairingKPQ_pop(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
+void* PairingKPQ_pop(KeyedPriorityQueue* queue) {
 	PriorityQueueNode* oldRoot = ((PriorityQueueNode*)queue->priv[0]);
 	if (oldRoot == NULL)
 		//Underflow
@@ -132,7 +132,7 @@ void* PairingKPQ_pop(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1)
 	return result;
 }
 
-bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) __attribute__((const, nonnull(1))) {
+bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) {
 	PriorityQueueNode* node = malloc(sizeof(PriorityQueueNode));
 	if (node == NULL)
 		return false;
@@ -147,11 +147,11 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) _
 	return true;
 }
 
-void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
+void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
 	PriorityQueueNode* root = ((PriorityQueueNode*)queue->priv[0]);
 	doReleaseNode(root, cleaner);
 }
 
-void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
+void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) {
 	PairingKPQ_clear(queue, cleaner);
 }
