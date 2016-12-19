@@ -128,7 +128,7 @@ void* PairingKPQ_pop(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1)
 	void* result = oldRoot->value;
 	PriorityQueueNode* firstChild = oldRoot->child;
 	free(oldRoot);
-	((PriorityQueueNode*)queue->priv[0]) = combineSibilings(firstChild);
+	queue->priv[0] = (void*) combineSibilings(firstChild);
 	return result;
 }
 
@@ -141,16 +141,17 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) _
 	node->sibiling = NULL;
 	node->key = key;
 	node->value = value;
-	PriorityQueueNode** root = &((PriorityQueueNode*)queue->priv[0]);
-	*root = doMerge(*root, node);
+	PriorityQueueNode* root = ((PriorityQueueNode*)queue->priv[0]);
+	root = doMerge(root, node);
+	queue->priv[0] = (void*) root;
 	return true;
 }
 
 void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
 	PriorityQueueNode* root = ((PriorityQueueNode*)queue->priv[0]);
-	doReleaseNode(root);
+	doReleaseNode(root, cleaner);
 }
 
-void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1)) {
+void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
 	PairingKPQ_clear(queue, cleaner);
 }
