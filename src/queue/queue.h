@@ -11,9 +11,9 @@ struct Queue_s;
 struct RelativePriorityQueue_s;
 struct KeyedPriorityQueue_s;
 
-LIBCOLLECTIONS_PUBLIC typedef struct Queue_s Queue;
-LIBCOLLECTIONS_PUBLIC typedef struct RelativePriorityQueue_s RelativePriorityQueue;
-LIBCOLLECTIONS_PUBLIC typedef struct KeyedPriorityQueue_s KeyedPriorityQueue;
+typedef struct Queue_s Queue;
+typedef struct RelativePriorityQueue_s RelativePriorityQueue;
+typedef struct KeyedPriorityQueue_s KeyedPriorityQueue;
 
 struct Queue_s {
 	bool (*push) (Queue* queue, void* value);
