@@ -23,7 +23,7 @@ struct Queue_s {
 	void (*clear) (Queue* queue, Cleaner* cleaner);
 	void (*release) (Queue* queue, Cleaner* cleaner);
 	CollectionType type;
-	unsigned char priv[sizeof(void*) * 4];//Implementation-specific data
+	void* priv[sizeof(void*) * 4];//Implementation-specific data
 };
 
 struct RelativePriorityQueue_s {
@@ -35,7 +35,7 @@ struct RelativePriorityQueue_s {
 	void (*release) (RelativePriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
 	Comparator* comparator;
-	unsigned char priv[sizeof(void*) * 4];//Implementation-specific data
+	void* priv[sizeof(void*) * 4];//Implementation-specific data
 };
 
 struct KeyedPriorityQueue_s {
@@ -47,7 +47,7 @@ struct KeyedPriorityQueue_s {
 	void (*clear) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	void (*release) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
-	unsigned char priv[sizeof(void*) * 4];//Implementation-specific data
+	void* priv[sizeof(void*) * 4];//Implementation-specific data
 };
 
 Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
