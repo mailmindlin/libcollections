@@ -39,6 +39,7 @@ static PriorityQueueNode* doMerge(PriorityQueueNode* treeA, PriorityQueueNode* t
 		return treeA;
 	}
 }
+
 static PriorityQueueNode* combineSibilings(PriorityQueueNode* firstSibiling) {
 	if (firstSibiling == NULL || firstSibiling->sibiling == NULL)
 		return firstSibiling;
@@ -85,14 +86,31 @@ static PriorityQueueNode* combineSibilings(PriorityQueueNode* firstSibiling) {
 	return lastPair;
 }
 
-unsigned int PairingKPQ_peekKey(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
+static void doReleaseNode(PriorityQueueNode* node, Cleaner* cleaner) {
+	PriorityQueueNode* current = node;
+	while (current != NULL) {
+		PriorityQueueNode* sibiling = current->sibiling;
+		PriorityQueueNode* child = current->child;
+		cleaner(current->value);
+		free(current);
+		current = sibiling;
+		if (child != NULL) {
+			if (current != NULL)
+				doReleaseNode(child);
+			else
+				current = child;
+		}
+	}
+}
+
+unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return 0;
 	return ((PriorityQueueNode*)queue->priv[0])->key;
 }
 
-void* PairingKPQ_peek(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
+void* PairingKPQ_peek(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1))) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return NULL;
@@ -110,7 +128,8 @@ void* PairingKPQ_pop(KeyedPriorityQueue* queue) __attribute__((const, nonnull(1)
 	((PriorityQueueNode*)queue->priv[0]) = combineSibilings(firstChild);
 	return result;
 }
-bool PairingKPQ_push(PriorityQueue* queue, unsigned int key, void* value) __attribute__((const, nonnull(1))) {
+
+bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) __attribute__((const, nonnull(1))) {
 	PriorityQueueNode* node = malloc(sizeof(PriorityQueueNode));
 	if (node == NULL)
 		return false;
@@ -119,15 +138,16 @@ bool PairingKPQ_push(PriorityQueue* queue, unsigned int key, void* value) __attr
 	node->sibiling = NULL;
 	node->key = key;
 	node->value = value;
-	((PriorityQueueNode*)queue->priv[0]) = doMerge(queue->root, node);
+	PriorityQueueNode** root = &((PriorityQueueNode*)queue->priv[0]);
+	*root = doMerge(*root, node);
 	return true;
 }
 
-void PairingKPQ_clear(PriorityQueue* queue) __attribute__((const, nonnull(1))) {
-	
+void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1))) {
+	PriorityQueueNode* root = ((PriorityQueueNode*)queue->priv[0]);
+	doReleaseNode(root);
 }
 
-void PairingKPQ_release(PriorityQueue* queue) __attribute__((const, nonnull(1)) {
-	PairingKPQ_clear(queue);
-	free(queue);
+void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) __attribute__((const, nonnull(1)) {
+	PairingKPQ_clear(queue, cleaner);
 }
