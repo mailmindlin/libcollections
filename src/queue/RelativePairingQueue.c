@@ -5,14 +5,6 @@
 
 //Pairing heap implementation
 //see https://users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp, https://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
-struct PairingRPQNode_s;
-typedef struct PairingRPQNode_s PairingRPQNode;
-struct PairingRPQNode_s {
-	PairingRPQNode* parent;
-	PairingRPQNode* child;
-	PairingRPQNode* sibiling;
-	void *value;
-};
 
 static PairingRPQNode* doMerge(PairingRPQNode* treeA, PairingRPQNode* treeB, Comparator* comparator) {
 	if (treeA == NULL)
@@ -101,18 +93,18 @@ void* PairingRPQ_peek(RelativePriorityQueue* queue) {
 	if (queue->priv[0] == NULL)
 		//Underflow
 		return NULL;
-	return queue->priv.pairingRoot->value;
+	return queue->pairingRPQData.root->value;
 }
 
 void* PairingRPQ_pop(RelativePriorityQueue* queue) {
-	PairingRPQNode* oldRoot = queue->priv.pairingRoot;
+	PairingRPQNode* oldRoot = queue->pairingRPQData.root;
 	if (oldRoot == NULL)
 		//Underflow
 		return NULL;
 	void* result = oldRoot->value;
 	PairingRPQNode* firstChild = oldRoot->child;
 	free(oldRoot);
-	queue->priv.pairingRoot = (void*) combineSibilings(firstChild, queue->comparator);
+	queue->pairingRPQData.root = combineSibilings(firstChild, queue->comparator);
 	return result;
 }
 
@@ -123,12 +115,12 @@ bool PairingRPQ_push(RelativePriorityQueue* queue, void* value) {
 	node->child = NULL;
 	node->sibiling = NULL;
 	node->value = value;
-	queue->priv.pairingRoot = doMerge(queue->priv.pairingRoot, node, queue->comparator);
+	queue->pairingRPQData.root = doMerge(queue->pairingRPQData.root, node, queue->comparator);
 	return true;
 }
 
 void PairingRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner) {
-	PairingRPQNode* root = queue->priv.pairingRoot;
+	PairingRPQNode* root = queue->pairingRPQData.root;
 	doReleaseNode(root, cleaner);
 }
 

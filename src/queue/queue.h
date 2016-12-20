@@ -11,9 +11,10 @@ struct Queue_s;
 struct RelativePriorityQueue_s;
 struct KeyedPriorityQueue_s;
 
-union QueueData {};
-union KeyedPriorityQueueData;
-union RelativePriorityQueueData;
+struct PairingRPQNode;
+struct PairingKPQNode;
+struct FibonacciRPQNode;
+struct FibonacciKPQNode;
 
 typedef struct Queue_s Queue;
 typedef struct RelativePriorityQueue_s RelativePriorityQueue;
@@ -27,7 +28,7 @@ struct Queue_s {
 	void (*clear) (Queue* queue, Cleaner* cleaner);
 	void (*release) (Queue* queue, Cleaner* cleaner);
 	CollectionType type;
-	union QueueData priv; //Implementation-specific data
+	union {} priv; //Implementation-specific data
 };
 
 struct RelativePriorityQueue_s {
@@ -39,7 +40,15 @@ struct RelativePriorityQueue_s {
 	void (*release) (RelativePriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
 	Comparator* comparator;
-	union KeyedPriorityQueueData priv; //Implementation-specific data
+	//Implementation-specific data. Please don't touch.
+	union {
+		struct {
+			struct PairingRPQNode* root;
+		} pairingRPQData;
+		struct {
+			struct FibonacciRPQNode* root;
+		} fibonacciRPQData;
+	};
 };
 
 struct KeyedPriorityQueue_s {
@@ -51,7 +60,15 @@ struct KeyedPriorityQueue_s {
 	void (*clear) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	void (*release) (KeyedPriorityQueue* queue, Cleaner* cleaner);
 	CollectionType type;
-	union RelativePriorityQueueData priv; //Implementation-specific data
+	//Implementation-specific data. Please don't touch.
+	union {
+		struct {
+			struct PairingKPQNode* root;
+		} pairingKPQData;
+		struct {
+			struct FibonacciKPQNode* root;
+		} fibonacciKPQData;
+	};
 };
 
 Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);

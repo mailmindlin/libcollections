@@ -38,16 +38,6 @@ typedef struct FibonacciKPQNode {
 	bool marked;
 } FibonacciKPQNode;
 
-union RelativePriorityQueueData {
-	PairingRPQNode* pairingRoot;
-	FibonacciRPQNode* fibonacciRoot;
-};
-
-union KeyedPriorityQueueData {
-	PairingKPQNode* pairingRoot;
-	FibonacciKPQNode* fibonacciRoot;
-};
-
 LIBCOLLECTIONS_LOCAL bool __RPQ_Priv0Null(RelativePriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL bool __KPQ_Priv0Null(KeyedPriorityQueue* queue);
 

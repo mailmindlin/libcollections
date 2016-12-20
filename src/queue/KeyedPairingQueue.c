@@ -90,28 +90,28 @@ static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
 }
 
 unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) {
-	if (queue->priv.pairingRoot == NULL)
+	if (queue->pairingKPQData.root == NULL)
 		//Underflow
 		return 0;
-	return queue->priv.pairingRoot->key;
+	return queue->pairingKPQData.root->key;
 }
 
 void* PairingKPQ_peek(KeyedPriorityQueue* queue) {
-	if (queue->priv.pairingRoot == NULL)
+	if (queue->pairingKPQData.root == NULL)
 		//Underflow
 		return NULL;
-	return queue->priv.pairingRoot->value;
+	return queue->pairingKPQData.root->value;
 }
 
 void* PairingKPQ_pop(KeyedPriorityQueue* queue) {
-	PairingKPQNode* oldRoot = queue->priv.pairingRoot;
+	PairingKPQNode* oldRoot = queue->pairingKPQData.root;
 	if (oldRoot == NULL)
 		//Underflow
 		return NULL;
 	void* result = oldRoot->value;
 	PairingKPQNode* firstChild = oldRoot->child;
 	free(oldRoot);
-	queue->priv.pairingRoot = (void*) combineSibilings(firstChild);
+	queue->pairingKPQData.root = combineSibilings(firstChild);
 	return result;
 }
 
@@ -123,12 +123,12 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) {
 	node->sibiling = NULL;
 	node->key = key;
 	node->value = value;
-	queue->priv->pairingRoot = doMerge(queue->priv.pairingRoot, node);
+	queue->priv->pairingRoot = doMerge(queue->pairingKPQData.root, node);
 	return true;
 }
 
 void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
-	PairingKPQNode* root = queue->priv.pairingRoot;
+	PairingKPQNode* root = queue->pairingKPQData.root;
 	doReleaseNode(root, cleaner);
 }
 
