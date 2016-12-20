@@ -5,8 +5,10 @@ typedef enum {
 	UnknownCollectionType,
 	FibonacciQueue,
 	PairingQueue,
+	LinkedQueue,
 	RelativeFibonacciPriorityQueue,
 	RelativePairingPriorityQueue,
+	RelativeLinkedPriorityQueue,
 	KeyedFibonacciPriorityQueue,
 	KeyedPairingPriorityQueue
 } CollectionType;
