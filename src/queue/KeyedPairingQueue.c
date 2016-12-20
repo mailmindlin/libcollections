@@ -89,6 +89,10 @@ static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
 	}
 }
 
+bool PairingKPQ_empty(RelativePriorityQueue* queue) {
+	return queue->pairingKPQData.root == NULL;
+}
+
 unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) {
 	if (queue->pairingKPQData.root == NULL)
 		//Underflow
