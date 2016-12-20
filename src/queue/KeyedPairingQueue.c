@@ -89,7 +89,7 @@ static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
 	}
 }
 
-bool PairingKPQ_empty(RelativePriorityQueue* queue) {
+bool PairingKPQ_empty(KeyedPriorityQueue* queue) {
 	return queue->pairingKPQData.root == NULL;
 }
 
