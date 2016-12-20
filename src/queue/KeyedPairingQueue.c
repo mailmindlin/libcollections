@@ -96,6 +96,10 @@ unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue) {
 	return queue->pairingKPQData.root->key;
 }
 
+bool PairingKPQ_empty(KeyedPriorityQueue* queue) {
+	return queue->pairingKPQData.root == NULL;
+}
+
 void* PairingKPQ_peek(KeyedPriorityQueue* queue) {
 	if (queue->pairingKPQData.root == NULL)
 		//Underflow

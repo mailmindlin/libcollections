@@ -89,6 +89,10 @@ static void doReleaseNode(PairingRPQNode* node, Cleaner* cleaner) {
 	}
 }
 
+bool PairingRPQ_empty(RelativePriorityQueue* queue) {
+	return queue->pairingRPQData.root == NULL;
+}
+
 void* PairingRPQ_peek(RelativePriorityQueue* queue) {
 	if (queue->priv[0] == NULL)
 		//Underflow
