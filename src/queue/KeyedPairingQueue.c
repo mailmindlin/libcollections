@@ -123,7 +123,7 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) {
 	node->sibiling = NULL;
 	node->key = key;
 	node->value = value;
-	queue->priv->pairingRoot = doMerge(queue->pairingKPQData.root, node);
+	queue->pairingKPQData.root = doMerge(queue->pairingKPQData.root, node);
 	return true;
 }
 
