@@ -5,8 +5,8 @@
 #define __LIBCOLLECTIONS_QUEUE_PRIV_H
 
 typedef struct PairingRPQNode {
-	struct PairingKPQNode* sibiling;
-	struct PairingKPQNode* child;
+	struct PairingRPQNode* sibiling;
+	struct PairingRPQNode* child;
 	void* value;
 } PairingRPQNode;
 

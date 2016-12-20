@@ -94,7 +94,7 @@ bool PairingRPQ_empty(RelativePriorityQueue* queue) {
 }
 
 void* PairingRPQ_peek(RelativePriorityQueue* queue) {
-	if (queue->priv[0] == NULL)
+	if (queue->pairingRPQData.root == NULL)
 		//Underflow
 		return NULL;
 	return queue->pairingRPQData.root->value;
