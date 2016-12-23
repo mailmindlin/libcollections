@@ -43,6 +43,20 @@ typedef struct SinglyLinkedNode {
 	void* value;
 } SinglyLinkedNode;
 
+typedef struct SinglyLinkedKeyedNode {
+	struct SinglyLinkedKeyedNode* next;
+	unsigned int key;
+	void* value;
+} SinglyLinkedKeyedNode;
+
+//Linked Queue methods
+LIBCOLLECTIONS_LOCAL bool  LinkedQueue_push(Queue* queue, void* value);
+LIBCOLLECTIONS_LOCAL void* LinkedQueue_peek(Queue* queue);
+LIBCOLLECTIONS_LOCAL void* LinkedQueue_pop (Queue* queue);
+LIBCOLLECTIONS_LOCAL bool  LinkedQueue_empty(Queue* queue);
+LIBCOLLECTIONS_LOCAL void  LinkedQueue_clear(Queue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  LinkedQueue_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedQueue_clear);
+
 //Fibonacci RPQ methods
 LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(Queue* queue, void* value);
 LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_peek(Queue* queue);
