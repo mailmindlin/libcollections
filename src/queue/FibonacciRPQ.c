@@ -4,26 +4,26 @@
 #include "queue.h"
 #include "queue-priv.h"
 
-LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(RelativePriorityQueue* queue, void* value) {
+LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(Queue* queue, void* value) {
 	return false;
 }
 
-LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_peek(RelativePriorityQueue* queue) {
+LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_peek(Queue* queue) {
 	return NULL;
 }
 
-LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_pop (RelativePriorityQueue* queue) {
+LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_pop (Queue* queue) {
 	return NULL;
 }
 
-LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_empty(RelativePriorityQueue* queue) {
+LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_empty(Queue* queue) {
 	return queue->fibonacciRPQData.root == NULL;
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(Queue* queue, Cleaner* cleaner) {
 	
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(Queue* queue, Cleaner* cleaner) {
 	
 }

@@ -44,20 +44,20 @@ typedef struct SinglyLinkedNode {
 } SinglyLinkedNode;
 
 //Fibonacci RPQ methods
-LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(RelativePriorityQueue* queue, void* value);
-LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_peek(RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_pop (RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_empty(RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner);
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(Queue* queue, void* value);
+LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_peek(Queue* queue);
+LIBCOLLECTIONS_LOCAL void* FibonacciRPQ_pop (Queue* queue);
+LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_empty(Queue* queue);
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(Queue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(Queue* queue, Cleaner* cleaner);
 
 //Pairing heap RPQ methods
-LIBCOLLECTIONS_LOCAL bool  PairingRPQ_push(RelativePriorityQueue* queue, void* value);
-LIBCOLLECTIONS_LOCAL void* PairingRPQ_pop (RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL void* PairingRPQ_peek(RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL bool  PairingRPQ_empty(RelativePriorityQueue* queue);
-LIBCOLLECTIONS_LOCAL void  PairingRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner);
-LIBCOLLECTIONS_LOCAL void  PairingRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL bool  PairingRPQ_push(Queue* queue, void* value);
+LIBCOLLECTIONS_LOCAL void* PairingRPQ_pop (Queue* queue);
+LIBCOLLECTIONS_LOCAL void* PairingRPQ_peek(Queue* queue);
+LIBCOLLECTIONS_LOCAL bool  PairingRPQ_empty(Queue* queue);
+LIBCOLLECTIONS_LOCAL void  PairingRPQ_clear(Queue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  PairingRPQ_release(Queue* queue, Cleaner* cleaner) WEAKREF(PairingRPQ_clear);
 
 //Fibonacci KPQ methods
 LIBCOLLECTIONS_LOCAL bool  FibonacciKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value);
@@ -75,6 +75,6 @@ LIBCOLLECTIONS_LOCAL void* PairingKPQ_peek(KeyedPriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL bool  PairingKPQ_empty(KeyedPriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL void  PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner);
-LIBCOLLECTIONS_LOCAL void  PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) WEAKREF(PairingKPQ_clear);
 
 #endif

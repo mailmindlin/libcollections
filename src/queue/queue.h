@@ -29,31 +29,30 @@ struct Queue_s {
 	void (*clear) (Queue* queue, Cleaner* cleaner);
 	void (*release) (Queue* queue, Cleaner* cleaner);
 	CollectionType type;
-	union {
-		struct {
-			SinglyLinkedNode* head;
-			SinglyLinkedNode* tail;
-		} linkedQueueData;
-	} priv; //Implementation-specific data
-};
-
-struct RelativePriorityQueue_s {
-	bool (*push) (RelativePriorityQueue* queue, void* value);
-	void* (*peek) (RelativePriorityQueue* queue);
-	void* (*pop) (RelativePriorityQueue* queue);
-	bool (*isEmpty) (RelativePriorityQueue* queue);
-	void (*clear) (RelativePriorityQueue* queue, Cleaner* cleaner);
-	void (*release) (RelativePriorityQueue* queue, Cleaner* cleaner);
-	CollectionType type;
-	Comparator* comparator;
 	//Implementation-specific data. Please don't touch.
 	union {
+		union {
+			struct {
+				SinglyLinkedNode* head;
+			} linkedFIFOData;
+		} fifo;
+		union {
+			struct {
+				SinglyLinkedNode* head;
+				SinglyLinkedNode* tail;
+			} linkedLIFOData;
+		} lifo;
 		struct {
-			struct PairingRPQNode* root;
-		} pairingRPQData;
-		struct {
-			struct FibonacciRPQNode* root;
-		} fibonacciRPQData;
+			Comparator* comparator;
+			union {
+				struct {
+					struct PairingRPQNode* root;
+				} pairingRPQData;
+				struct {
+					struct FibonacciRPQNode* root;
+				} fibonacciRPQData;
+			};
+		} rpq;
 	};
 };
 
@@ -78,7 +77,7 @@ struct KeyedPriorityQueue_s {
 };
 
 Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
-RelativePriorityQueue* LIBCOLLECTIONS_PUBLIC InitRelativePriorityQueue(RelativePriorityQueue* queue, CollectionType type, Comparator* comparator);
+Queue* LIBCOLLECTIONS_PUBLIC InitRelativePriorityQueue(Queue* queue, CollectionType type, Comparator* comparator);
 KeyedPriorityQueue* LIBCOLLECTIONS_PUBLIC InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type);
 
 #endif

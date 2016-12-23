@@ -89,45 +89,41 @@ static void doReleaseNode(PairingRPQNode* node, Cleaner* cleaner) {
 	}
 }
 
-bool PairingRPQ_empty(RelativePriorityQueue* queue) {
-	return queue->pairingRPQData.root == NULL;
+bool PairingRPQ_empty(Queue* queue) {
+	return queue->rpq.pairingRPQData.root == NULL;
 }
 
-void* PairingRPQ_peek(RelativePriorityQueue* queue) {
-	if (queue->pairingRPQData.root == NULL)
+void* PairingRPQ_peek(Queue* queue) {
+	if (queue->rpq.pairingRPQData.root == NULL)
 		//Underflow
 		return NULL;
-	return queue->pairingRPQData.root->value;
+	return queue->rpq.pairingRPQData.root->value;
 }
 
-void* PairingRPQ_pop(RelativePriorityQueue* queue) {
-	PairingRPQNode* oldRoot = queue->pairingRPQData.root;
+void* PairingRPQ_pop(Queue* queue) {
+	PairingRPQNode* oldRoot = queue->rpq.pairingRPQData.root;
 	if (oldRoot == NULL)
 		//Underflow
 		return NULL;
 	void* result = oldRoot->value;
 	PairingRPQNode* firstChild = oldRoot->child;
 	free(oldRoot);
-	queue->pairingRPQData.root = combineSibilings(firstChild, queue->comparator);
+	queue->rpq.pairingRPQData.root = combineSibilings(firstChild, queue->rpq.comparator);
 	return result;
 }
 
-bool PairingRPQ_push(RelativePriorityQueue* queue, void* value) {
+bool PairingRPQ_push(Queue* queue, void* value) {
 	PairingRPQNode* node = malloc(sizeof(PairingRPQNode));
 	if (node == NULL)
 		return false;
 	node->child = NULL;
 	node->sibiling = NULL;
 	node->value = value;
-	queue->pairingRPQData.root = doMerge(queue->pairingRPQData.root, node, queue->comparator);
+	queue->rpq.pairingRPQData.root = doMerge(queue->rpq.pairingRPQData.root, node, queue->rpq.comparator);
 	return true;
 }
 
-void PairingRPQ_clear(RelativePriorityQueue* queue, Cleaner* cleaner) {
-	PairingRPQNode* root = queue->pairingRPQData.root;
+void PairingRPQ_clear(Queue* queue, Cleaner* cleaner) {
+	PairingRPQNode* root = queue->rpq.pairingRPQData.root;
 	doReleaseNode(root, cleaner);
-}
-
-void PairingRPQ_release(RelativePriorityQueue* queue, Cleaner* cleaner) {
-	PairingRPQ_clear(queue, cleaner);
 }

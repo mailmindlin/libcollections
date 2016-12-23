@@ -6,7 +6,7 @@
 KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type) {
 	queue->type = type;
 	switch (type) {
-		case KeyedFibonacciPriorityQueue:
+		case FibonacciKPQ:
 			queue->fibonacciKPQData.root = NULL;
 			queue->push   = &FibonacciKPQ_push;
 			queue->peek   = &FibonacciKPQ_peek;
@@ -15,7 +15,7 @@ KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, Collection
 			queue->clear  = &FibonacciKPQ_clear;
 			queue->release= &FibonacciKPQ_release;
 			break;
-		case KeyedPairingPriorityQueue:
+		case PairingKPQ:
 			queue->pairingKPQData.root = NULL;
 			queue->push   = &PairingKPQ_push;
 			queue->peek   = &PairingKPQ_peek;
@@ -30,12 +30,24 @@ KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, Collection
 	return queue;
 }
 
-RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, CollectionType type, Comparator* comparator) {
-	queue->comparator = comparator;
+Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type) {
 	queue->type = type;
 	switch (type) {
-		case RelativeFibonacciPriorityQueue:
-			queue->fibonacciRPQData.root = NULL;
+		case LinkedFIFO:
+		case LinkedLIFO:
+			//TODO finish
+		default:
+			return NULL;
+	}
+	return queue;
+}
+
+Queue* InitRelativePriorityQueue(Queue* queue, CollectionType type, Comparator* comparator) {
+	queue->type = type;
+	queue->rpq.comparator = comparator;
+	switch (type) {
+		case FibonacciRPQ:
+			queue->rpq.fibonacciRPQData.root = NULL;
 			queue->push   = &FibonacciRPQ_push;
 			queue->peek   = &FibonacciRPQ_peek;
 			queue->pop    = &FibonacciRPQ_pop;
@@ -43,8 +55,8 @@ RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, C
 			queue->clear  = &FibonacciRPQ_clear;
 			queue->release= &FibonacciRPQ_release;
 			break;
-		case RelativePairingPriorityQueue:
-			queue->pairingRPQData.root = NULL;
+		case PairingRPQ:
+			queue->rpq.pairingRPQData.root = NULL;
 			queue->push   = &PairingRPQ_push;
 			queue->peek   = &PairingRPQ_peek;
 			queue->pop    = &PairingRPQ_pop;
