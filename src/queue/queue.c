@@ -5,9 +5,9 @@
 
 KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type) {
 	queue->type = type;
-	memset(&queue->priv, 0x00, sizeof(queue->priv));
 	switch (type) {
 		case KeyedFibonacciPriorityQueue:
+			queue->fibonacciKPQData.root = NULL;
 			queue->push   = &FibonacciKPQ_push;
 			queue->peek   = &FibonacciKPQ_peek;
 			queue->pop    = &FibonacciKPQ_pop;
@@ -16,6 +16,7 @@ KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, Collection
 			queue->release= &FibonacciKPQ_release;
 			break;
 		case KeyedPairingPriorityQueue:
+			queue->pairingKPQData.root = NULL;
 			queue->push   = &PairingKPQ_push;
 			queue->peek   = &PairingKPQ_peek;
 			queue->pop    = &PairingKPQ_pop;
@@ -34,6 +35,7 @@ RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, C
 	queue->type = type;
 	switch (type) {
 		case RelativeFibonacciPriorityQueue:
+			queue->fibonacciRPQData.root = NULL;
 			queue->push   = &FibonacciRPQ_push;
 			queue->peek   = &FibonacciRPQ_peek;
 			queue->pop    = &FibonacciRPQ_pop;
@@ -42,6 +44,7 @@ RelativePriorityQueue* InitRelativePriorityQueue(RelativePriorityQueue* queue, C
 			queue->release= &FibonacciRPQ_release;
 			break;
 		case RelativePairingPriorityQueue:
+			queue->pairingRPQData.root = NULL;
 			queue->push   = &PairingRPQ_push;
 			queue->peek   = &PairingRPQ_peek;
 			queue->pop    = &PairingRPQ_pop;

@@ -15,6 +15,7 @@ struct PairingRPQNode;
 struct PairingKPQNode;
 struct FibonacciRPQNode;
 struct FibonacciKPQNode;
+struct SinglyLinkedNode;
 
 typedef struct Queue_s Queue;
 typedef struct RelativePriorityQueue_s RelativePriorityQueue;
@@ -28,7 +29,12 @@ struct Queue_s {
 	void (*clear) (Queue* queue, Cleaner* cleaner);
 	void (*release) (Queue* queue, Cleaner* cleaner);
 	CollectionType type;
-	union {} priv; //Implementation-specific data
+	union {
+		struct {
+			SinglyLinkedNode* head;
+			SinglyLinkedNode* tail;
+		} linkedQueueData;
+	} priv; //Implementation-specific data
 };
 
 struct RelativePriorityQueue_s {

@@ -5,8 +5,8 @@
 #define __LIBCOLLECTIONS_QUEUE_PRIV_H
 
 typedef struct PairingRPQNode {
-	struct PairingKPQNode* sibiling;
-	struct PairingKPQNode* child;
+	struct PairingRPQNode* sibiling;
+	struct PairingRPQNode* child;
 	void* value;
 } PairingRPQNode;
 
@@ -37,6 +37,11 @@ typedef struct FibonacciKPQNode {
 	size_t degree;
 	bool marked;
 } FibonacciKPQNode;
+
+typedef struct SinglyLinkedNode {
+	struct SinglyLinkedNode* next;
+	void* value;
+} SinglyLinkedNode;
 
 //Fibonacci RPQ methods
 LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(RelativePriorityQueue* queue, void* value);
@@ -71,4 +76,5 @@ LIBCOLLECTIONS_LOCAL unsigned int PairingKPQ_peekKey(KeyedPriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL bool  PairingKPQ_empty(KeyedPriorityQueue* queue);
 LIBCOLLECTIONS_LOCAL void  PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner);
 LIBCOLLECTIONS_LOCAL void  PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner);
+
 #endif
