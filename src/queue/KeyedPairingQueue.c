@@ -3,8 +3,18 @@
 #include "queue.h"
 #include "queue-priv.h"
 
-//Pairing heap implementation
-//see https://users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp, https://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
+/**
+ * Pairing heap implementation.
+ * 
+ * Pairing heaps are weird because (at the time of writing) nobody is really
+ * sure how efficient they really are, but in practice, they seem to perform
+ * better than most other queues.
+ *
+ * See also:
+ *  - en.wikipedia.org/wiki/Pairing_heap
+ *  - users.cs.fiu.edu/~weiss/dsaa_c++/code/PairingHeap.cpp
+ *  - www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf
+ */
 
 static PairingKPQNode* doMerge(PairingKPQNode* treeA, PairingKPQNode* treeB) {
 	if (treeA == NULL)
@@ -73,6 +83,12 @@ static PairingKPQNode* combineSibilings(PairingKPQNode* firstSibiling) {
 }
 
 static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
+	/*
+	 * TODO look at/profile whether it is faster in practice to
+	 * traverse sibilings or children (i.e., whether any given node 
+	 * is more likely to have a child or a sibiling); should improve
+	 * performance at least a bit, and help reduce stack overflows
+	 */
 	PairingKPQNode* current = node;
 	while (current != NULL) {
 		PairingKPQNode* sibiling = current->sibiling;
@@ -138,8 +154,4 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) {
 void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
 	PairingKPQNode* root = queue->pairingKPQData.root;
 	doReleaseNode(root, cleaner);
-}
-
-void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) {
-	PairingKPQ_clear(queue, cleaner);
 }
