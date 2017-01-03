@@ -50,12 +50,20 @@ typedef struct SinglyLinkedKeyedNode {
 } SinglyLinkedKeyedNode;
 
 //Linked Queue methods
-LIBCOLLECTIONS_LOCAL bool  LinkedQueue_push(Queue* queue, void* value);
-LIBCOLLECTIONS_LOCAL void* LinkedQueue_peek(Queue* queue);
-LIBCOLLECTIONS_LOCAL void* LinkedQueue_pop (Queue* queue);
-LIBCOLLECTIONS_LOCAL bool  LinkedQueue_empty(Queue* queue);
-LIBCOLLECTIONS_LOCAL void  LinkedQueue_clear(Queue* queue, Cleaner* cleaner);
-LIBCOLLECTIONS_LOCAL void  LinkedQueue_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedQueue_clear);
+LIBCOLLECTIONS_LOCAL bool  LinkedFIFO_push(Queue* queue, void* value);
+LIBCOLLECTIONS_LOCAL void* LinkedFIFO_peek(Queue* queue);
+LIBCOLLECTIONS_LOCAL void* LinkedFIFO_pop (Queue* queue);
+LIBCOLLECTIONS_LOCAL bool  LinkedFIFO_empty(Queue* queue);
+LIBCOLLECTIONS_LOCAL void  LinkedFIFO_clear(Queue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  LinkedFIFO_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedFIFO_clear);
+
+//Linked LIFO methods
+LIBCOLLECTIONS_LOCAL bool  LinkedLIFO_push(Queue* queue, void* value);
+LIBCOLLECTIONS_LOCAL void* LinkedLIFO_peek(Queue* queue);
+LIBCOLLECTIONS_LOCAL void* LinkedLIFO_pop (Queue* queue);
+LIBCOLLECTIONS_LOCAL bool  LinkedLIFO_empty(Queue* queue);
+LIBCOLLECTIONS_LOCAL void  LinkedLIFO_clear(Queue* queue, Cleaner* cleaner);
+LIBCOLLECTIONS_LOCAL void  LinkedLIFO_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedLIFO_clear);
 
 //Fibonacci RPQ methods
 LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_push(Queue* queue, void* value);
