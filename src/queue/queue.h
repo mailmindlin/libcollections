@@ -33,13 +33,13 @@ struct Queue_s {
 	union {
 		union {
 			struct {
-				SinglyLinkedNode* head;
+				struct SinglyLinkedNode* head;
 			} linkedFIFOData;
 		} fifo;
 		union {
 			struct {
-				SinglyLinkedNode* head;
-				SinglyLinkedNode* tail;
+				struct SinglyLinkedNode* head;
+				struct SinglyLinkedNode* tail;
 			} linkedLIFOData;
 		} lifo;
 		struct {

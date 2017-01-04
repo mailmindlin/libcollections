@@ -27,7 +27,7 @@
 #endif
 
 #ifndef WEAKREF
-#define WEAKREF(fn) __attribute__ ((weak, alias(##fn))
+#define WEAKREF(fn) __attribute__ ((weak, alias(#fn))
 #endif
 
 #endif
