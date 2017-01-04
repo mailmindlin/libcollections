@@ -1,3 +1,5 @@
+#include <stddef.h>	//For NULL
+#include <stdlib.h>	//For malloc, free
 #include <stdbool.h>
 #include "queue-priv.h"
 

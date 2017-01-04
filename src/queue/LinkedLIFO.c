@@ -8,10 +8,12 @@ bool LinkedLIFO_push(Queue* queue, void* value) {
 	if (newTail == NULL)
 		return false;
 	newTail->value = value;
-	newTail->next NULL;
+	newTail->next = NULL;
 	
-	SinglyLinkedNode* tail = queue->lifo.linkedLIFOData.head;
-	//TODO finish
+	//Push the new node onto the end
+	SinglyLinkedNode* tail = queue->lifo.linkedLIFOData.tail;
+	tail->next = newTail;
+	queue->lifo.linkedLIFOData.tail = newTail;
 	return true;
 }
 
