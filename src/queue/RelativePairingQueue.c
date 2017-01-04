@@ -127,3 +127,5 @@ void PairingRPQ_clear(Queue* queue, Cleaner* cleaner) {
 	PairingRPQNode* root = queue->rpq.pairingRPQData.root;
 	doReleaseNode(root, cleaner);
 }
+
+void PairingRPQ_release(Queue* queue, Cleaner* cleaner) WEAKREF(PairingRPQ_clear);

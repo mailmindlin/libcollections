@@ -155,3 +155,5 @@ void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
 	PairingKPQNode* root = queue->pairingKPQData.root;
 	doReleaseNode(root, cleaner);
 }
+
+void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) WEAKREF(PairingKPQ_clear);

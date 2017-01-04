@@ -39,3 +39,5 @@ void LinkedFIFO_clear(Queue* queue, Cleaner* cleaner) {
 	while(!LinkedFIFO_empty(queue))
 		cleaner(LinkedFIFO_pop(queue));
 }
+
+void LinkedFIFO_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedFIFO_clear);
