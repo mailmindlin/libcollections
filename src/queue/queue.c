@@ -33,9 +33,25 @@ KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, Collection
 Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type) {
 	queue->type = type;
 	switch (type) {
+		case UnknownCollectionType:
 		case LinkedFIFO:
+			queue->fifo.linkedFIFOData.head = NULL;
+			queue->push   = &LinkedFIFO_push;
+			queue->peek   = &LinkedFIFO_peek;
+			queue->pop    = &LinkedFIFO_pop;
+			queue->isEmpty= &LinkedFIFO_empty;
+			queue->clear  = &LinkedFIFO_clear;
+			queue->release= &LinkedFIFO_release;
+			break;
 		case LinkedLIFO:
-			//TODO finish
+			queue->lifo.linkedLIFOData.head = NULL;
+			queue->push   = &LinkedLIFO_push;
+			queue->peek   = &LinkedLIFO_peek;
+			queue->pop    = &LinkedLIFO_pop;
+			queue->isEmpty= &LinkedLIFO_empty;
+			queue->clear  = &LinkedLIFO_clear;
+			queue->release= &LinkedLIFO_release;
+			break;
 		default:
 			return NULL;
 	}
@@ -55,6 +71,7 @@ Queue* InitRelativePriorityQueue(Queue* queue, CollectionType type, Comparator* 
 			queue->clear  = &FibonacciRPQ_clear;
 			queue->release= &FibonacciRPQ_release;
 			break;
+		case UnknownCollectionType:
 		case PairingRPQ:
 			queue->rpq.pairingRPQData.root = NULL;
 			queue->push   = &PairingRPQ_push;
