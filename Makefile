@@ -15,7 +15,7 @@ CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
 LDFLAGS += -lm -lc
 
 # Detect GCC extensions by trial & exception (try to compile an empty file with the given flag)
-testccflag=$(shell (echo "" | $(CC) $1 -xc - -o /dev/null > /dev/null 2>&1 && echo "yep") || echo "nope")
+testccflag=$(shell (echo "" | $(CC) -E -xc - -o /dev/null $1 > /dev/null 2>&1 && echo "yep") || echo "nope")
 SUPPORT_LTO = $(call testccflag, -flto)
 $(info LTO: $(SUPPORT_LTO))
 ifeq ($(SUPPORT_LTO),yep)
