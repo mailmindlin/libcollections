@@ -1,18 +1,58 @@
-LIB_NAME := collections
+LIBDIR := /usr/local/lib
+LIB_NAME := libcollections
 
-rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+#Installation directory prefix
+PREFIX := /usr
+#Directory where libvideo.so will be installed
+LIB_INSTALL_DIR := $(PREFIX)/lib
+MANDIR := $(PREFIX)/share/man
+#Directory where the include files will be installed
+INC_INSTALL_DIR := $(PREFIX)/include
+USER_INCLUDES:= ./src/collections.h ./src/queue/queue.h
 
 CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
-CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
-LDFLAGS += -lm -lc -shared
+CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb -fdiagnostics-color=auto -flto
+LDFLAGS += -lm -lc -flto=3
 
-SRC := $(call rwildcard, ./src/, *.c)
-OBJ := $(patsubst %.c,%.o, $(SRC))
+rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
+SRC   := $(call rwildcard, ./src/, *.c)
+OBJ   := $(patsubst %.c,%.o, $(SRC))
+TESTS := $(call rwildcard, ./test/, *.c)
 
-LIB = $(LIB_NAME).so
+ifeq ($(LINKTYPE),static)
+	LIB = $(LIB_NAME).a
+else
+	LIB = $(LIB_NAME).so
+endif
 
 all: $(LIB)
 
-$(LIB): $(OBJ)
-	$(CC) $(LDFLAGS) -Wl,-soname,$(LIB) $(OBJ) -o $(LIB)
+install: all
+	mkdir -p $(DESTDIR)$(INC_INSTALL_DIR)
+	install -p -m 644 $(USER_INCLUDES) $(DESTDIR)$(INC_INSTALL_DIR)
+	mkdir -p $(DESTDIR)$(LIB_INSTALL_DIR)
+ifeq ($(LINKTYPE),static)
+		install -m 644 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
+else
+		install -m 755 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
+endif
 
+uninstall:
+	for f in $(USER_INCLUDES); do rm -f $(DESTDIR)$(INC_INSTALL_DIR)/$${f}; done
+	rm -f $(DESTDIR)$(LIB_INSTALL_DIR)/$(LIB)
+
+test: $(TESTS)
+
+clean:
+	rm -rvf $(OBJ) $(LIB) $(TESTS) $(LIB_NAME).so $(LIB_NAME).a
+
+$(LIB): $(OBJ)
+
+$(patsubst %.c,%,$(TESTS)): %: $(patsubst %, %.o, $(%))
+	$(CC) $(LDFLAGS)
+
+%.a:
+	$(AR) cqs --plugin=$(shell gcc --print-file-name=liblto_plugin.so) $@ $^
+
+%.so:
+	$(CC) -shared $(LDFLAGS) -Wl,-soname,$(LIB) -o $(LIB) $^
