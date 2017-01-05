@@ -10,12 +10,24 @@ MANDIR := $(PREFIX)/share/man
 INC_INSTALL_DIR := $(PREFIX)/include/collections
 USER_INCLUDES:= ./src/collections.h ./src/queue/queue.h
 
+CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
+CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
+LDFLAGS += -lm -lc
 
-CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
-# Detect CC extensions by trial & exception (try to compile an empty file with the given flag)
-optccflag=$(if ifeq ($(shell echo "" | $(CC) $1 -xc - -o /dev/null > /dev/null 2>&1 && echo yep),yep), $(if ifneq ($2,),$(info $2: yep))$1, $(if ifneq ($2,),$(info $2: nope)))
-CFLAGS += $(call optccflag, -flto, LTO) $(call optccflag, -fdiagnostics-color=auto, color)
-LDFLAGS += -lm -lc $(call optccflag, -flto=3)
+# Detect GCC extensions by trial & exception (try to compile an empty file with the given flag)
+testccflag=$(shell (echo "" | $(CC) $1 -xc - -o /dev/null > /dev/null 2>&1 && echo "yep") || echo "nope")
+SUPPORT_LTO = $(call testccflag, -flto)
+$(info LTO: $(SUPPORT_LTO))
+ifeq ($(SUPPORT_LTO),yep)
+	CFLAGS += -flto
+	LDFLAGS += -flto=3
+endif
+SUPPORT_PRETTY_OUT = $(call testccflag, -fdiagnostics-color=auto)
+$(info color: $(SUPPORT_PRETTY_OUT))
+ifeq ($(SUPPORT_PRETTY_OUT),yep)
+	CFLAGS += -fdiagnostics-color=auto
+	LDFLAGS += -fdiagnostics-color=auto
+endif
 
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 SRC   = $(call rwildcard, ./src/, *.c)
@@ -34,10 +46,14 @@ install: all
 	mkdir -p $(DESTDIR)$(INC_INSTALL_DIR)
 	install -p -m 644 $(USER_INCLUDES) $(DESTDIR)$(INC_INSTALL_DIR)
 	mkdir -p $(DESTDIR)$(LIB_INSTALL_DIR)
-	# Static/dynamic libraries need different permissions
-	install -m $(if ifeq ($(LINKTYPE),static),644,755) $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
+ifeq ($(LINKTYPE),static)
+		install -m 644 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
+else
+		install -m 755 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
+endif
 
 includes: ./include $(patsubst ./src/%,./include/%,$(USER_INCLUDES))
+
 
 uninstall:
 	for f in $(USER_INCLUDES); do rm -f $(DESTDIR)$(INC_INSTALL_DIR)/$${f}; done
