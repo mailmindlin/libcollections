@@ -108,7 +108,7 @@ typedef struct KeyedPriorityQueue {
  * If UnknownCollectionType is given, it will be treated as a LinkedFIFO.
  * Returns the initialized queue on success, else NULL.
  */
-Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
+LIBCOLLECTIONS_PUBLIC Queue* InitQueue(Queue* queue, CollectionType type);
 /**
  * Initialize a relative priority queue. Instead of a 'normal' FIFO/LIFO queue that
  * orders elements by their insertion order, relative priority queues order them using
@@ -121,7 +121,7 @@ Queue* LIBCOLLECTIONS_PUBLIC InitQueue(Queue* queue, CollectionType type);
  *      A relative priority queue based on a fibonacci heap.
  * Returns the initialized queue on success, else NULL.
  */
-Queue* LIBCOLLECTIONS_PUBLIC InitRelativePriorityQueue(Queue* queue, CollectionType type, Comparator* comparator);
+LIBCOLLECTIONS_PUBLIC Queue* InitRelativePriorityQueue(Queue* queue, CollectionType type, Comparator* comparator);
 /**
  * Initialize a keyed priority queue. Similar to a relative priority queue,
  * it differs in that instead of a comparator, an absolute priority is given on every
@@ -133,6 +133,6 @@ Queue* LIBCOLLECTIONS_PUBLIC InitRelativePriorityQueue(Queue* queue, CollectionT
  *      A relative priority queue based on a fibonacci heap.
  * Returns the initialized queue on success, else NULL.
  */
-KeyedPriorityQueue* LIBCOLLECTIONS_PUBLIC InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type);
+LIBCOLLECTIONS_PUBLIC KeyedPriorityQueue* InitKeyedPriorityQueue(KeyedPriorityQueue* queue, CollectionType type);
 
 #endif
