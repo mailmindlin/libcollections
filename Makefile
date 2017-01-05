@@ -11,12 +11,22 @@ INC_INSTALL_DIR := $(PREFIX)/include/collections
 USER_INCLUDES:= ./src/collections.h ./src/queue/queue.h
 
 CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
-CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb -fdiagnostics-color=auto -flto
-LDFLAGS += -lm -lc -flto=3
+CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
+LDFLAGS += -lm -lc
 
-# Detect GCC extensions by trial & error
-SUPPORT_LTO = $(shell (echo "" | $(CC) -flto -xc - -o /dev/stdout && /bin/true) || /bin/false)
+# Detect GCC extensions by trial & exception (try to compile an empty file with the given flag)
+SUPPORT_LTO = $(shell (echo "" | $(CC) -flto -xc - -o /dev/stdout && echo "yep") || echo "nope")
 $(info $(SUPPORT_LTO))
+ifeq ($(SUPPORT_LTO),yep)
+	CFLAGS += -flto
+	LDFLAGS += -flto=3
+endif
+SUPPORT_PRETTY_OUT = $(shell (echo "" | $(CC) -fdiagnostics-color=auto -xc - -o /dev/stdout && echo "yep") || echo "nope")
+$(info $(SUPPORT_PRETTY_OUT))
+ifeq ($(SUPPORT_PRETTY_OUT),yep)
+	CFLAGS += -fdiagnostics-color=auto
+	LDFLAGS += -fdiagnostics-color=auto
+endif
 
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
 SRC   = $(call rwildcard, ./src/, *.c)
