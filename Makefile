@@ -7,7 +7,7 @@ PREFIX := /usr
 LIB_INSTALL_DIR := $(PREFIX)/lib
 MANDIR := $(PREFIX)/share/man
 #Directory where the include files will be installed
-INC_INSTALL_DIR := $(PREFIX)/include
+INC_INSTALL_DIR := $(PREFIX)/include/collections
 USER_INCLUDES:= ./src/collections.h ./src/queue/queue.h
 
 CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
@@ -37,6 +37,9 @@ else
 		install -m 755 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
 endif
 
+includes: ./include $(patsubst ./src/%,./include/%,$(USER_INCLUDES))
+
+
 uninstall:
 	for f in $(USER_INCLUDES); do rm -f $(DESTDIR)$(INC_INSTALL_DIR)/$${f}; done
 	rm -f $(DESTDIR)$(LIB_INSTALL_DIR)/$(LIB)
@@ -44,13 +47,19 @@ uninstall:
 test: $(TESTS)
 
 clean:
-	rm -rvf $(OBJ) $(LIB) $(TESTS) $(LIB_NAME).so $(LIB_NAME).a
+	rm -rvf $(OBJ) $(LIB) $(TESTS) $(LIB_NAME).so $(LIB_NAME).a ./include
 
 $(LIB): $(OBJ)
+
+./include:
+	mkdir -p ./include
 
 $(patsubst %.c,%,$(TESTS)): %: $(patsubst %, %.o, $(%))
 	$(CC) $(LDFLAGS)
 
+$(patsubst ./src/%,./include/%,$(USER_INCLUDES)): %:
+	mkdir -p $(shell dirname $@)
+	cp $(patsubst include/%,src/%,$@) $(shell dirname $@)
 %.a:
 	$(AR) cqs --plugin=$(shell gcc --print-file-name=liblto_plugin.so) $@ $^
 
