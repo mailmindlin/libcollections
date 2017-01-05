@@ -15,7 +15,7 @@ CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb -fdiagnostics
 LDFLAGS += -lm -lc -flto=3
 
 # Detect GCC extensions by trial & error
-SUPPORT_LTO = $(shell (echo "" | $(CC) -flto -xc - -o /dev/stdout && /dev/true) || /dev/false)
+SUPPORT_LTO = $(shell (echo "" | $(CC) -flto -xc - -o /dev/stdout && /bin/true) || /bin/false)
 $(info $(SUPPORT_LTO))
 
 rwildcard=$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d))
