@@ -15,14 +15,15 @@ CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
 LDFLAGS += -lm -lc
 
 # Detect GCC extensions by trial & exception (try to compile an empty file with the given flag)
-SUPPORT_LTO = $(shell (echo "" | $(CC) -flto -xc - -o /dev/stdout && echo "yep") || echo "nope")
-$(info $(SUPPORT_LTO))
+testccflag=$(shell (echo "" | $(CC) $1 -xc - -o /dev/null > /dev/null 2>&1 && echo "yep") || echo "nope")
+SUPPORT_LTO = $(call testccflag, -flto)
+$(info LTO: $(SUPPORT_LTO))
 ifeq ($(SUPPORT_LTO),yep)
 	CFLAGS += -flto
 	LDFLAGS += -flto=3
 endif
-SUPPORT_PRETTY_OUT = $(shell (echo "" | $(CC) -fdiagnostics-color=auto -xc - -o /dev/stdout && echo "yep") || echo "nope")
-$(info $(SUPPORT_PRETTY_OUT))
+SUPPORT_PRETTY_OUT = $(call testccflag, -fdiagnostics-color=auto)
+$(info color: $(SUPPORT_PRETTY_OUT))
 ifeq ($(SUPPORT_PRETTY_OUT),yep)
 	CFLAGS += -fdiagnostics-color=auto
 	LDFLAGS += -fdiagnostics-color=auto
