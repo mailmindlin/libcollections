@@ -47,7 +47,7 @@ all: $(LIB)
 
 install: all
 	mkdir -p $(DESTDIR)$(INC_INSTALL_DIR)
-	install -p -m 644 $(USER_INCLUDES) $(DESTDIR)$(INC_INSTALL_DIR)
+	rsync -zarv --prune-empty-dirs --chmod=644,+X --exclude "*-priv.h" --include "*/" --include "*.h" --exclude "*" "./src/" "$(DESTDIR)$(INC_INSTALL_DIR)"
 	mkdir -p $(DESTDIR)$(LIB_INSTALL_DIR)
 ifeq ($(LINKTYPE),static)
 		install -m 644 $(LIB) $(DESTDIR)$(LIB_INSTALL_DIR)
@@ -59,7 +59,7 @@ includes: ./include $(patsubst ./src/%,./include/%,$(USER_INCLUDES))
 
 
 uninstall:
-	for f in $(USER_INCLUDES); do rm -f $(DESTDIR)$(INC_INSTALL_DIR)/$${f}; done
+	rm -rf $(DESTDIR)$(INC_INSTALL_DIR)
 	rm -f $(DESTDIR)$(LIB_INSTALL_DIR)/$(LIB)
 
 test: $(TESTS)
