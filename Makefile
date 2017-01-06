@@ -20,7 +20,7 @@ SUPPORT_LTO = $(call testccflag, -flto)
 $(info LTO: $(SUPPORT_LTO))
 ifeq ($(SUPPORT_LTO),yep)
 	CFLAGS += -flto
-	LDFLAGS += -flto=3
+	LDFLAGS += -flto
 endif
 SUPPORT_PRETTY_OUT = $(call testccflag, -fdiagnostics-color=auto)
 $(info color: $(SUPPORT_PRETTY_OUT))
@@ -74,6 +74,7 @@ $(patsubst %.c,%,$(TESTS)): %: $(patsubst %, %.o, $(%))
 
 $(patsubst ./src/%,./include/%,$(USER_INCLUDES)): %:
 	mkdir -p $(shell dirname $@)
+	echo "Include " $@
 	cp $(patsubst include/%,src/%,$@) $(shell dirname $@)
 %.a:
 	$(AR) cqs --plugin=$(shell gcc --print-file-name=liblto_plugin.so) $@ $^
