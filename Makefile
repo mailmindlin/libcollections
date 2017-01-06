@@ -19,8 +19,11 @@ testccflag=$(shell (echo "" | $(CC) -E -xc - -o /dev/null $1 > /dev/null 2>&1 &&
 SUPPORT_LTO = $(call testccflag, -flto)
 $(info LTO: $(SUPPORT_LTO))
 ifeq ($(SUPPORT_LTO),yep)
-	CFLAGS += -flto
-	LDFLAGS += -flto
+	# Clang's LTO doesn't seem to be working.
+	ifeq ($(findstr clang,$(CC)),)
+		CFLAGS += -flto
+		LDFLAGS += -flto
+	endif
 endif
 SUPPORT_PRETTY_OUT = $(call testccflag, -fdiagnostics-color=auto)
 $(info color: $(SUPPORT_PRETTY_OUT))
