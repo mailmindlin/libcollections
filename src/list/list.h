@@ -2,6 +2,7 @@
 #include "../collections.h"
 #include "../locality.h"
 #include "../iterator/iterator.h"
+#include "../common/LinkedNode.h"
 #ifndef __LIBCOLLECTIONS_LIST_H
 #define __LIBCOLLECTIONS_LIST_H
 
@@ -22,7 +23,7 @@ typedef struct List {
 			size_t length;
 		} arrayListData;
 		struct {
-			
+			DoublyLinkedNode* head;
 		} linkedListData;
 	};
 } List;
