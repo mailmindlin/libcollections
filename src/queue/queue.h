@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "../collections.h"
 #include "../locality.h"
+#include "../common/LinkedNode.h"
 #ifndef __LIBCOLLECTIONS_QUEUE_H
 #define __LIBCOLLECTIONS_QUEUE_H
 
@@ -61,8 +62,8 @@ typedef struct Queue {
 		} fifo;
 		union {
 			struct {
-				struct SinglyLinkedNode* head;
-				struct SinglyLinkedNode* tail;
+				SinglyLinkedNode* head;
+				SinglyLinkedNode* tail;
 			} linkedLIFOData;
 		} lifo;
 		struct {

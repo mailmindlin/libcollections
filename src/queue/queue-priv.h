@@ -38,17 +38,6 @@ typedef struct FibonacciKPQNode {
 	bool marked;
 } FibonacciKPQNode;
 
-typedef struct SinglyLinkedNode {
-	struct SinglyLinkedNode* next;
-	void* value;
-} SinglyLinkedNode;
-
-typedef struct SinglyLinkedKeyedNode {
-	struct SinglyLinkedKeyedNode* next;
-	unsigned int key;
-	void* value;
-} SinglyLinkedKeyedNode;
-
 //Linked Queue methods
 LIBCOLLECTIONS_LOCAL bool  LinkedFIFO_push(Queue* queue, void* value);
 LIBCOLLECTIONS_LOCAL void* LinkedFIFO_peek(Queue* queue);
