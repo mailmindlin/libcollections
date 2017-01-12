@@ -1,4 +1,5 @@
-#include <stdbool.h>
+#include <stdbool.h>//For bool
+#include <stddef.h>//For size_t
 #include "../collections.h"
 #include "../locality.h"
 #include "../iterator/iterator.h"
