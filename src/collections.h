@@ -8,7 +8,9 @@ typedef enum {
 	FibonacciRPQ,
 	PairingRPQ,
 	FibonacciKPQ,
-	PairingKPQ
+	PairingKPQ,
+	LinkedList,
+	ArrayList
 } CollectionType;
 
 /**
