@@ -1,16 +1,17 @@
 language: c
 sudo: false
 os: linux
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
+
 matrix:
   include:
-    - compiler: gcc
-      env: CC=gcc-4.9
-    - compiler: clang
+  - compiler: gcc
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-4.9
+    env: CC=gcc-4.9
+  - compiler: clang
 script:
     - make all
