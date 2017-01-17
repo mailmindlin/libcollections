@@ -10,10 +10,10 @@ matrix:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-4.9']
       env:
-        - CC=gcc-4.9
+        - COMPILER=gcc-4.9
 
     - os: linux
       compiler: clang
-      env: CC=clang
+      env: COMPILER=clang
 script:
-  make all
+  make CC=$COMPILER all
