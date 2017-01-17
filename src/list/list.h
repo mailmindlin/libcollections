@@ -20,7 +20,7 @@ typedef struct List {
 	//Implementation-specific data. Please don't touch.
 	union {
 		struct {
-			void* elements[];
+			void** elements;
 			size_t capacity;
 			size_t length;
 		} arrayListData;

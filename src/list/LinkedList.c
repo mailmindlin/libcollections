@@ -7,7 +7,7 @@ static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head,
 
 size_t LinkedList_add(List* list, void* value) {
 	if (value == NULL)
-		return list->linkedListData.length;
+		return list->linkedListData.numNodes;
 	DoublyLinkedKeyedNode* current = malloc(sizeof(DoublyLinkedKeyedNode));
 	if (current == NULL)
 		return -1u;
@@ -16,7 +16,7 @@ size_t LinkedList_add(List* list, void* value) {
 	if (list->linkedListData.numNodes == 0) {
 		current->key = 0;
 		current->next = current;
-		current->prev = prev;
+		current->prev = current;
 		list->linkedListData.head = current;
 		list->linkedListData.numNodes = 1;
 		return 0;
@@ -63,8 +63,8 @@ void* LinkedList_set(List* list, size_t index, void* value) {
 		return NULL;
 	} else {
 		// Hit (replace the entry)
-		void* result = current->value;
-		current->value = value;
+		void* result = prev->value;
+		prev->value = value;
 		return result;
 	}
 }

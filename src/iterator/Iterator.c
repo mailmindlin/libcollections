@@ -1,5 +1,5 @@
 #include <errno.h>
-#include "Iterator.h"
+#include "iterator.h"
 
 /**
  * ArrayIterator:
@@ -28,7 +28,7 @@ static void* ArrayIterator_next(Iterator* iterator) {
 	if (currentIdx > arrayLen)
 		return NULL;
 	iterator->privI[0]++;
-	return iterator->privP[currentIdx];
+	return ((void**)iterator->privP)[currentIdx];
 }
 
 Iterator* IterateOverArray(size_t offset, size_t length, void* values) {

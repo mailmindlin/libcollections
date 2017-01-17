@@ -11,7 +11,7 @@ INC_INSTALL_DIR := $(PREFIX)/include/collections
 USER_INCLUDES:= ./src/collections.h ./src/queue/queue.h
 
 CFLAGS += -Wall -Wpointer-arith -Wextra -Wmissing-prototypes -Wstrict-prototypes -Wconversion -Wunused-function
-CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb
+CFLAGS += -fPIC -ftree-vectorize -fvisibility=hidden -I. -Os -ggdb -std=gnu11
 LDFLAGS += -lm -lc
 
 # Detect GCC extensions by trial & exception (try to compile an empty file with the given flag)

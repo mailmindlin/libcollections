@@ -1,5 +1,6 @@
 #include "list.h"
 #include "list-priv.h"
+#include <errno.h>
 
 size_t    (*add)      (struct List* list, void* value) __attribute__ ((nonnull (1)));
 	void*     (*set)      (struct List* list, size_t index, void* value) __attribute__ ((nonnull (1)));
