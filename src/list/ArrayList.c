@@ -30,7 +30,16 @@ static bool ArrayList_grow(List* list, const size_t minCap) {
 static void ArrayList_shrink(List* list) {
 	const size_t oldCapacity = list->arrayListData.capacity;
 	const size_t length = list->arrayListData.length;
-	
+	if ((length + 10) < (oldCapacity / 2)) {
+		size_t newCapacity = length * 3 / 2 + 1;
+		if (newCapacity < length)
+			newCapacity = length;
+		void* newElems = realloc(list->arrayListData.elements, newCapacity);
+		if (newElems == NULL)
+			return;
+		list->arrayListData.elements = newElems;
+		list->arrayListData.capacity = newCapacity;
+	}
 }
 
 size_t ArrayList_add(List* list, void* value) {
@@ -80,7 +89,21 @@ static ArrayList_iterator_hasNext(Iterator* self) {
 
 static void* ArrayList_iterator_next(Iterator* self) {
 	List* list = (List*) self->privP;
-	
+	size_t nextIdx = self->privI[0];
+	if (nextIdx >= list->arrayListData.length)
+		//out of bounds
+		return NULL;
+	void* result = list->arrayListData.elements[nextIdx];
+	self->privI[0]++;
+	return result;
+}
+
+static void* ArrayList_iterator_remove(Iterator* self) {
+	List* list = (List*) self->privP;
+	size_t nextIdx = self->privI[0];
+	if (nextIdx == 0)
+		return NULL;//Before first element
+	return list->remove(list, nextIdx - 1);
 }
 
 Iterator* ArrayList_iterator(List* list) {

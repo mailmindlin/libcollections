@@ -1,3 +1,4 @@
+#include <stdlib.h> //For malloc, free
 #include "list-priv.h"
 
 static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key) {

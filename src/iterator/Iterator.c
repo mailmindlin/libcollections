@@ -1,4 +1,5 @@
 #include <errno.h>
+#include <stdlib.h>
 #include "iterator.h"
 
 /**
@@ -7,12 +8,12 @@
  * privI[0] = next index
  * privI[1] = array length
  */
-LIBCOLLECTIONS_LOCAL void* Iterator_removeFail(Iterator* iterator) {
+void* Iterator_removeFail(Iterator* iterator) {
 	errno = ENOTSUP;
 	return NULL;
 }
 
-LIBCOLLECTIONS_LOCAL void Iterator_releaseSelf(Iterator* iterator) {
+void Iterator_releaseSelf(Iterator* iterator) {
 	free(iterator);
 }
 
