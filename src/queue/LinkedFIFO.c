@@ -35,9 +35,12 @@ bool LinkedFIFO_empty(Queue* queue) {
 	return queue->fifo.linkedFIFOData.head == NULL;
 }
 
-void LinkedFIFO_clear(Queue* queue, Cleaner* cleaner) {
-	while(!LinkedFIFO_empty(queue))
-		cleaner(LinkedFIFO_pop(queue));
+void LinkedFIFO_clear(Queue* queue, Consumer* cleaner) {
+	while(!LinkedFIFO_empty(queue)) {
+		void* elem = LinkedFIFO_pop(queue);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, elem);
+	}
 }
 
 void LinkedFIFO_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedFIFO_clear);

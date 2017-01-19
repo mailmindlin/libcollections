@@ -20,10 +20,10 @@ LIBCOLLECTIONS_LOCAL bool  FibonacciRPQ_empty(Queue* queue) {
 	return queue->rpq.fibonacciRPQData.root == NULL;
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(Queue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_clear(Queue* queue, Consumer* cleaner) {
 	
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(Queue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciRPQ_release(Queue* queue, Consumer* cleaner) {
 	
 }

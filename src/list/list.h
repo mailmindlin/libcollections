@@ -14,8 +14,8 @@ typedef struct List {
 	void*     (*remove)   (struct List* list, size_t index) __attribute__ ((nonnull (1)));
 	Iterator* (*iterator) (struct List* list) __attribute__ ((nonnull (1)));
 	size_t    (*size)     (struct List* list) __attribute__ ((nonnull (1)));
-	void      (*clear)    (struct List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
-	void      (*release)  (struct List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+	void      (*clear)    (struct List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
+	void      (*release)  (struct List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
 	CollectionType type;
 	//Implementation-specific data. Please don't touch.
 	union {

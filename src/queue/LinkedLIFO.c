@@ -40,8 +40,11 @@ bool LinkedLIFO_empty(Queue* queue) {
 }
 
 void LinkedLIFO_clear(Queue* queue, Cleaner* cleaner) {
-	while(!LinkedLIFO_empty(queue))
-		cleaner(LinkedLIFO_pop(queue));
+	while(!LinkedLIFO_empty(queue)) {
+		void* elem = LinkedLIFO_pop(queue);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, elem);
+	}
 }
 
 void LinkedLIFO_release(Queue* queue, Cleaner* cleaner) WEAKREF(LinkedLIFO_clear);

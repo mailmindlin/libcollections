@@ -2,6 +2,7 @@
 #include "../collections.h"
 #include "../locality.h"
 #include "../common/LinkedNode.h"
+#include "../common/Functions.h"
 #ifndef __LIBCOLLECTIONS_QUEUE_H
 #define __LIBCOLLECTIONS_QUEUE_H
 
@@ -41,14 +42,14 @@ typedef struct Queue {
 	 * Note that after this method is called, isEmpty MUST return true, but this
 	 * queue's data structure MAY NOT be safely released.
 	 */
-	void (*clear) (struct Queue* queue, Cleaner* cleaner);
+	void (*clear) (struct Queue* queue, Consumer* cleaner);
 	/**
 	 * Removes all elements from this queue, optionally applying the given cleaner to
 	 * them.
 	 * All internal memory MUST be released, and after this method is called, this
 	 * queue's structure should be safe to free.
 	 */
-	void (*release) (struct Queue* queue, Cleaner* cleaner);
+	void (*release) (struct Queue* queue, Consumer* cleaner);
 	/**
 	 * The implementation type of this queue. Please don't set.
 	 */
@@ -86,8 +87,8 @@ typedef struct KeyedPriorityQueue {
 	unsigned int (*peekKey) (struct KeyedPriorityQueue* queue);
 	void* (*pop) (struct KeyedPriorityQueue* queue);
 	bool (*isEmpty) (struct KeyedPriorityQueue* queue);
-	void (*clear) (struct KeyedPriorityQueue* queue, Cleaner* cleaner);
-	void (*release) (struct KeyedPriorityQueue* queue, Cleaner* cleaner);
+	void (*clear) (struct KeyedPriorityQueue* queue, Consumer* cleaner);
+	void (*release) (struct KeyedPriorityQueue* queue, Consumer* cleaner);
 	CollectionType type;
 	//Implementation-specific data. Please don't touch.
 	union {

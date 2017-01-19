@@ -82,7 +82,7 @@ static PairingKPQNode* combineSibilings(PairingKPQNode* firstSibiling) {
 	return lastPair;
 }
 
-static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
+static void doReleaseNode(PairingKPQNode* node, Consumer* cleaner) {
 	/*
 	 * TODO look at/profile whether it is faster in practice to
 	 * traverse sibilings or children (i.e., whether any given node 
@@ -93,7 +93,8 @@ static void doReleaseNode(PairingKPQNode* node, Cleaner* cleaner) {
 	while (current != NULL) {
 		PairingKPQNode* sibiling = current->sibiling;
 		PairingKPQNode* child = current->child;
-		cleaner(current->value);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, current->value);
 		free(current);
 		current = sibiling;
 		if (child != NULL) {
@@ -147,9 +148,9 @@ bool PairingKPQ_push(KeyedPriorityQueue* queue, unsigned int key, void* value) {
 	return true;
 }
 
-void PairingKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
+void PairingKPQ_clear(KeyedPriorityQueue* queue, Consumer* cleaner) {
 	PairingKPQNode* root = queue->pairingKPQData.root;
 	doReleaseNode(root, cleaner);
 }
 
-void PairingKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) WEAKREF(PairingKPQ_clear);
+void PairingKPQ_release(KeyedPriorityQueue* queue, Consumer* cleaner) WEAKREF(PairingKPQ_clear);

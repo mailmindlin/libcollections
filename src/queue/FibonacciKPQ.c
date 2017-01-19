@@ -24,10 +24,10 @@ LIBCOLLECTIONS_LOCAL bool  FibonacciKPQ_empty(KeyedPriorityQueue* queue) {
 	return queue->fibonacciKPQData.root == NULL;
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciKPQ_clear(KeyedPriorityQueue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciKPQ_clear(KeyedPriorityQueue* queue, Consumer* cleaner) {
 	
 }
 
-LIBCOLLECTIONS_LOCAL void  FibonacciKPQ_release(KeyedPriorityQueue* queue, Cleaner* cleaner) {
+LIBCOLLECTIONS_LOCAL void  FibonacciKPQ_release(KeyedPriorityQueue* queue, Consumer* cleaner) {
 	
 }
