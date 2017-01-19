@@ -1,6 +1,7 @@
 #include <errno.h> //For errno
 #include <stdlib.h>//For realloc, free
 #include <stddef.h>//For size_t
+#include "list.h"
 #include "list-priv.h"
 
 /**
@@ -40,6 +41,31 @@ static void ArrayList_shrink(List* list) {
 		list->arrayListData.elements = newElems;
 		list->arrayListData.capacity = newCapacity;
 	}
+}
+
+List* ArrayList_create(List* list) {
+	List* result = list;
+	if (result == NULL) {
+		if ((result = malloc(sizeof(List))) == NULL) {
+			errno = ENOMEM;
+			return NULL;
+		}
+	}
+	
+	list->add =      &ArrayList_add;
+	list->set =      &ArrayList_set;
+	list->get =      &ArrayList_get;
+	list->remove =   &ArrayList_remove;
+	list->iterator = &ArrayList_iterator;
+	list->size =     &ArrayList_size;
+	list->clear =    &ArrayList_clear;
+	list->release=   (list == NULL) ? &ArrayList_releaseSelf : &ArrayList_release;
+	
+	list->type = ArrayList;
+	list->arrayListData.elements = NULL;
+	list->arrayListData.capacity = 0;
+	list->arrayListData.length = 0;
+	return result;
 }
 
 size_t ArrayList_add(List* list, void* value) {
@@ -123,12 +149,13 @@ size_t ArrayList_size(List* list) {
 	return list->arrayListData.length;
 }
 
-void ArrayList_clear(List* list, Cleaner* cleaner) {
+void ArrayList_clear(List* list, Consumer* cleaner) {
 	for (size_t i = 0; i < list->arrayListData.length; i++) {
 		void* element = list->arrayListData.elements[i];
 		if (element == NULL)
 			continue;
-		cleaner(element);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, element);
 		list->arrayListData.elements[i] = NULL;
 	}
 	list->arrayListData.length = 0;
@@ -141,3 +168,10 @@ void ArrayList_release(List* list, Cleaner* cleaner) {
 	list->arrayListData.elements = NULL;
 	list->arrayListData.capacity = 0;
 }
+
+void ArrayList_releaseSelf(List* list, Consumer* cleaner) {
+	ArrayList_clear(list, cleaner);
+	free(list->arrayListData.elements);
+	list->arrayListData.elements = NULL;
+	list->arrayListData.capacity = 0;
+	free(list);

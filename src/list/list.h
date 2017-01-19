@@ -31,6 +31,7 @@ typedef struct List {
 	};
 } List;
 
-LIBCOLLECTIONS_PUBLIC bool InitList(List* list, CollectionType type);
+LIBCOLLECTIONS_PUBLIC List* ArrayList_create(List* list);
+LIBCOLLECTIONS_PUBLIC List* LinkedList_create(List* list);
 
 #endif

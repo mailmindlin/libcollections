@@ -25,6 +25,7 @@ LIBCOLLECTIONS_LOCAL Iterator* ArrayList_iterator(List* list) __attribute__ ((no
 LIBCOLLECTIONS_LOCAL size_t ArrayList_size    (List* list) __attribute__ ((nonnull (1)));
 LIBCOLLECTIONS_LOCAL void   ArrayList_clear   (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
 LIBCOLLECTIONS_LOCAL void   ArrayList_release (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+LIBCOLLECTIONS_LOCAL void   ArrayList_releaseSelf(List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
 
 // List iterator implementation methods
 LIBCOLLECTIONS_LOCAL Iterator* ListIterator_create(List* list) __attribute__ ((nonnull (1)));

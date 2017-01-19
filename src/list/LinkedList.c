@@ -1,9 +1,44 @@
 #include <stdlib.h> //For malloc, free
 #include "list-priv.h"
 
+/**
+ * Get either the node with the given key, or the one immediately before where it should be
+ * Returns null if no such node exists (no nodes exist)
+ */
 static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key) {
 	if (head == NULL)
 		return NULL;
+	if (head->key > key)
+		return head->prev;
+	DoublyLinkedKeyedNode* current = head;
+	while ((current->key < key) && (current->next != head))
+		current = current->next;
+	return current;
+}
+
+List* LinkedList_create(List* list) {
+	List* result = list;
+	if (result == NULL) {
+		if ((result = malloc(sizeof(List))) == NULL) {
+			errno = ENOMEM;
+			return NULL;
+		}
+	}
+	
+	result->add =      &LinkedList_add;
+	result->set =      &LinkedList_set;
+	result->get =      &LinkedList_get;
+	result->remove =   &LinkedList_remove;
+	result->iterator = &LinkedList_iterator;
+	result->size =     &LinkedList_size;
+	result->clear =    &LinkedList_clear;
+	//Release list memory only if we allocated it
+	result->release =  (list == NULL) ? &LinkedList_release : &LinkedList_clear;
+	
+	list->type = LinkedList;
+	result->linkedListData.head = NULL;
+	result->linkedListData.numNodes = 0;
+	return result;
 }
 
 size_t LinkedList_add(List* list, void* value) {
@@ -23,6 +58,7 @@ size_t LinkedList_add(List* list, void* value) {
 		return 0;
 	}
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
+	//Insert to the left of the head
 	head->prev->next = current;
 	current->prev = head->prev;
 	head->prev = current;
@@ -80,13 +116,20 @@ void* LinkedList_get(List* list, size_t index) {
 void* LinkedList_remove(List* list, size_t index) {
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
 	DoublyLinkedKeyedNode* node = getNodeImmediatelyLEQ(head, index);
-	if (node != NULL && node->key == index) {
-		if (--list->linkedListData.numNodes == 0)
-			list->linkedListData.head = NULL;
-		if (node == head) {
-			
-		}
-	}
+	if (node == NULL || node->key != index)
+		//Didn't find it
+		return NULL;
+	//Handle head pointer updating
+	if (node == head)
+		list->linkedListData.head = node->next;
+	if (--list->linkedListData.numNodes == 0)
+		list->linkedListData.head = NULL;
+	//Unlink the node
+	node->next->prev = node->prev;
+	node->prev->next = node->next;
+	void* result = node->value;
+	free(node);
+	return result;
 }
 
 Iterator* LinkedList_iterator(List* list) {
@@ -99,20 +142,25 @@ size_t LinkedList_size(List* list) {
 	return list->linkedListData.head != NULL ? list->linkedListData.head->prev->key : 0;
 }
 
-void LinkedList_clear(List* list, Cleaner* cleaner) {
+void LinkedList_clear(List* list, Consumer* cleaner) {
 	list->linkedListData.numNodes = 0;
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
 	if (head == NULL)
 		return;
-	cleaner(head->value);
+	if (cleaner)
+		cleaner->apply(cleaner->priv, head->value);
 	DoublyLinkedKeyedNode* current = head->next;
 	free(head);
 	while (current != head) {
-		cleaner(current->value);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, current->value);
 		DoublyLinkedKeyedNode* next = current->next;
 		free(current);
 		current = next;
 	}
 }
 
-void LinkedList_release(List* list, Cleaner* cleaner) WEAKREF(LinkedList_clear);
+void LinkedList_release(List* list, Consumer* cleaner) {
+	LinkedList_clear(list, cleaner);
+	free(list);
+}
