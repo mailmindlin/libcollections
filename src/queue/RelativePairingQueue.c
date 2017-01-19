@@ -12,7 +12,7 @@ static PairingRPQNode* doMerge(PairingRPQNode* treeA, PairingRPQNode* treeB, Com
 	if (treeB == NULL)
 		return treeA;
 	
-	if (comparator(treeA->value, treeB->value) > 0) {
+	if (comparator->apply(comparator->priv, treeA->value, treeB->value) > 0) {
 		//Attach treeA as child of treeB
 		treeA->sibiling = treeB->child;
 		treeB->child = treeA;
@@ -72,12 +72,13 @@ static PairingRPQNode* combineSibilings(PairingRPQNode* firstSibiling, Comparato
 	return lastPair;
 }
 
-static void doReleaseNode(PairingRPQNode* node, Cleaner* cleaner) {
+static void doReleaseNode(PairingRPQNode* node, Consumer* cleaner) {
 	PairingRPQNode* current = node;
 	while (current != NULL) {
 		PairingRPQNode* sibiling = current->sibiling;
 		PairingRPQNode* child = current->child;
-		cleaner(current->value);
+		if (cleaner)
+			cleaner->apply(cleaner->priv, current->value);
 		free(current);
 		current = sibiling;
 		if (child != NULL) {
@@ -123,9 +124,9 @@ bool PairingRPQ_push(Queue* queue, void* value) {
 	return true;
 }
 
-void PairingRPQ_clear(Queue* queue, Cleaner* cleaner) {
+void PairingRPQ_clear(Queue* queue, Consumer* cleaner) {
 	PairingRPQNode* root = queue->rpq.pairingRPQData.root;
 	doReleaseNode(root, cleaner);
 }
 
-void PairingRPQ_release(Queue* queue, Cleaner* cleaner) WEAKREF(PairingRPQ_clear);
+void PairingRPQ_release(Queue* queue, Consumer* cleaner) WEAKREF(PairingRPQ_clear);
