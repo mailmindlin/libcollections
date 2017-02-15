@@ -1,5 +1,7 @@
+#include <stdlib.h> //malloc, free
+#include <string.h> //For strcmp, memcmp
+
 #include "Comparators.h"
-#include <string.h> //For strcmp, memcmp, malloc, free
 
 static void release_noop(void* p) {
 	((void)p);
@@ -23,7 +25,7 @@ Comparator* PointerComparator_init(Comparator* comparator) {
 	return comparator;
 }
 
-static int FixedLengthValueComparator_init(void* p, const void* a, const void* b) {
+static int FixedLengthValueComparator_apply(void* p, const void* a, const void* b) {
 	if (a == b)
 		return 0;
 	if (a == NULL)
@@ -38,7 +40,7 @@ Comparator* FixedLengthValueComparator_init(Comparator* comparator, size_t lengt
 	if ((comparator->priv = malloc(sizeof(size_t))) == NULL)
 		return NULL;
 	*((size_t*)comparator->priv) = length;
-	comparator->apply = &PointerComparator_apply;
+	comparator->apply = &FixedLengthValueComparator_apply;
 	comparator->release = &free;
 	return comparator;
 }
