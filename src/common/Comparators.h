@@ -1,6 +1,8 @@
 #ifndef __LIBCOLLECTIONS_COMMON_COMPARATORS_H
 #define __LIBCOLLECTIONS_COMMON_COMPARATORS_H
 
+#include <stddef.h>//size_t
+
 #include "Functions.h"
 #include "../locality.h"
 
