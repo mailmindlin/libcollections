@@ -4,6 +4,8 @@
 #ifndef __LIBCOLLECTIONS_HASH_H
 #define __LIBCOLLECTIONS_HASH_H
 
+#include <stddef.h> //size_t
+
 #include "../locality.h"
 #include "Functions.h"
 
