@@ -2,30 +2,32 @@
 #include <stdlib.h>
 #include "iterator.h"
 
+static bool Iterator_removeFail(Iterator* iterator) __attribute__ ((nonnull (1)));
+static void* Iterator_releaseSelf(Iterator* iterator) __attribute__ ((nonnull (1)));
 /**
  * ArrayIterator:
  * privP = pointer to array
  * privI[0] = next index
  * privI[1] = array length
  */
-void* Iterator_removeFail(Iterator* iterator) {
+static bool Iterator_removeFail(Iterator* iterator) {
 	errno = ENOTSUP;
-	return NULL;
+	return false;
 }
 
-void Iterator_releaseSelf(Iterator* iterator) {
+static void Iterator_releaseSelf(Iterator* iterator) {
 	free(iterator);
 }
 
 static bool ArrayIterator_hasNext(Iterator* iterator) {
-	const unsigned int nextIdx = iterator->privI[0];
-	const unsigned int arrayLen = iterator->privI[1];
+	const unsigned long nextIdx = iterator->privI[0];
+	const unsigned long arrayLen = iterator->privI[1];
 	return nextIdx > arrayLen;
 }
 
 static void* ArrayIterator_next(Iterator* iterator) {
-	const unsigned int currentIdx = iterator->privI[0];
-	const unsigned int arrayLen = iterator->privI[1];
+	const unsigned long currentIdx = iterator->privI[0];
+	const unsigned long arrayLen = iterator->privI[1];
 	if (currentIdx > arrayLen)
 		return NULL;
 	iterator->privI[0]++;
