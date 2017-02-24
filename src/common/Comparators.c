@@ -8,6 +8,7 @@ static void release_noop(void* p) {
 }
 
 static int PointerComparator_apply(void* p, const void* a, const void* b) {
+	((void)p);//Suppress unused parameter warnings
 	unsigned long aVal = (unsigned long) a;
 	unsigned long bVal = (unsigned long) b;
 	if (aVal > bVal)
@@ -46,6 +47,7 @@ Comparator* FixedLengthValueComparator_init(Comparator* comparator, size_t lengt
 }
 
 static int StringComparator_apply(void* p, const void* a, const void* b) {
+	((void)p);//Suppress unused parameter warnings
 	if (a == b)
 		return 0;
 	if (a == NULL)
