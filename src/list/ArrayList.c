@@ -1,10 +1,60 @@
 #include <errno.h> //For errno
 #include <stdlib.h>//For realloc, free
 #include <stddef.h>//For size_t
+
 #include "list.h"
-#include "list-priv.h"
+
+//ArrayList internal methods
+static bool ArrayList_grow(List* list, const size_t minCap) __attribute__ ((nonnull (1)));
+static void ArrayList_shrink(List* list) __attribute__ ((nonnull (1)));
+
+//Arraylist iterator methods
+static bool ArrayList_iterator_hasNext(Iterator* self) __attribute__ ((nonnull (1)));
+static void* ArrayList_iterator_next(Iterator* self) __attribute__ ((nonnull (1)));
+static static void* ArrayList_iterator_remove(Iterator* self) __attribute__ ((nonnull (1)));
+
+//ArrayList public methods
+static size_t ArrayList_add     (List* list, void* value) __attribute__ ((nonnull (1)));
+static void*  ArrayList_set     (List* list, size_t index, void* value) __attribute__ ((nonnull (1)));
+static void*  ArrayList_get     (List* list, size_t index) __attribute__ ((nonnull (1)));
+static void*  ArrayList_remove  (List* list, size_t index) __attribute__ ((nonnull (1)));
+static Iterator* ArrayList_iterator(List* list) __attribute__ ((nonnull (1)));
+static size_t ArrayList_size    (List* list) __attribute__ ((nonnull (1)));
+static void   ArrayList_clear   (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+static void   ArrayList_release (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+static void   ArrayList_releaseSelf(List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+
 
 /**
+ * Initializes ArrayList
+ */
+List* ArrayList_create(List* list) {
+	List* result = list;
+	if (result == NULL) {
+		if ((result = malloc(sizeof(List))) == NULL) {
+			errno = ENOMEM;
+			return NULL;
+		}
+	}
+	
+	list->add =      &ArrayList_add;
+	list->set =      &ArrayList_set;
+	list->get =      &ArrayList_get;
+	list->remove =   &ArrayList_remove;
+	list->iterator = &ArrayList_iterator;
+	list->size =     &ArrayList_size;
+	list->clear =    &ArrayList_clear;
+	list->release=   (list == NULL) ? &ArrayList_releaseSelf : &ArrayList_release;
+	
+	list->type = ArrayList;
+	list->arrayListData.elements = NULL;
+	list->arrayListData.capacity = 0;
+	list->arrayListData.length = 0;
+	return result;
+}
+
+/**
+ * (internal)
  * Grow the elements array to at least the size of minCap
  * @return success
  * May set errno on failure
@@ -26,6 +76,7 @@ static bool ArrayList_grow(List* list, const size_t minCap) {
 	return true;
 }
 /**
+ * (internal)
  * Optionally shrink the elements array
  */
 static void ArrayList_shrink(List* list) {
@@ -43,7 +94,7 @@ static void ArrayList_shrink(List* list) {
 	}
 }
 
-size_t ArrayList_add(List* list, void* value) {
+static size_t ArrayList_add(List* list, void* value) {
 	size_t index = list->arrayListData.length + 1;
 	ArrayList_set(list, index, value);
 	if (list->arrayListData.length != index)
@@ -52,19 +103,19 @@ size_t ArrayList_add(List* list, void* value) {
 	return index;
 }
 
-void* ArrayList_set(List* list, size_t index, void* value) {
+static void* ArrayList_set(List* list, size_t index, void* value) {
 	if (value == NULL)
 		return ArrayList_remove(list, index);
 	return NULL;//TODO finish
 }
 
-void* ArrayList_get(List* list, size_t index) {
+static void* ArrayList_get(List* list, size_t index) {
 	if (index > list->arrayListData.length)
 		return NULL;
 	return list->arrayListData.elements[index];
 }
 
-void* ArrayList_remove(List* list, size_t index) {
+static void* ArrayList_remove(List* list, size_t index) {
 	if (index > list->arrayListData.length)
 		return NULL;
 	void* result = list->arrayListData.elements[index];
@@ -102,7 +153,7 @@ static void* ArrayList_iterator_next(Iterator* self) {
 /**
  * (Used for iterator) removes the current element from this list.
  */
-static void* ArrayList_iterator_remove(Iterator* self) {
+static static void* ArrayList_iterator_remove(Iterator* self) {
 	size_t nextIdx = self->privI[0];
 	if (nextIdx == 0)
 		return NULL;//Before first element
@@ -115,7 +166,7 @@ static void* ArrayList_iterator_remove(Iterator* self) {
  * Internally, Iterator.privP will be a reference to this list,
  * and Iterator.privI[0] will be the next index to access.
  */
-Iterator* ArrayList_iterator(List* list) {
+static Iterator* ArrayList_iterator(List* list) {
 	Iterator* iterator = malloc(sizeof(Iterator));
 	if (iterator == NULL) {
 		errno = ENOMEM;
@@ -130,14 +181,14 @@ Iterator* ArrayList_iterator(List* list) {
 	return iterator;
 }
 
-size_t ArrayList_size(List* list) {
+static size_t ArrayList_size(List* list) {
 	return list->arrayListData.length;
 }
 
 /**
  * Release all elements
  */
-void ArrayList_clear(List* list, Consumer* cleaner) {
+static void ArrayList_clear(List* list, Consumer* cleaner) {
 	for (size_t i = 0; i < list->arrayListData.length; i++) {
 		void* element = list->arrayListData.elements[i];
 		if (element == NULL)
@@ -153,7 +204,7 @@ void ArrayList_clear(List* list, Consumer* cleaner) {
 /**
  * Release all elements and internal memory
  */
-void ArrayList_release(List* list, Cleaner* cleaner) {
+static void ArrayList_release(List* list, Cleaner* cleaner) {
 	ArrayList_clear(list, cleaner);
 	free(list->arrayListData.elements);
 	list->arrayListData.elements = NULL;
@@ -163,35 +214,10 @@ void ArrayList_release(List* list, Cleaner* cleaner) {
 /**
  * Release all elements, internal memory, and self
  */
-void ArrayList_releaseSelf(List* list, Consumer* cleaner) {
+static void ArrayList_releaseSelf(List* list, Consumer* cleaner) {
 	ArrayList_clear(list, cleaner);
 	free(list->arrayListData.elements);
 	list->arrayListData.elements = NULL;
 	list->arrayListData.capacity = 0;
 	free(list);
-}
-
-List* ArrayList_create(List* list) {
-	List* result = list;
-	if (result == NULL) {
-		if ((result = malloc(sizeof(List))) == NULL) {
-			errno = ENOMEM;
-			return NULL;
-		}
-	}
-	
-	list->add =      &ArrayList_add;
-	list->set =      &ArrayList_set;
-	list->get =      &ArrayList_get;
-	list->remove =   &ArrayList_remove;
-	list->iterator = &ArrayList_iterator;
-	list->size =     &ArrayList_size;
-	list->clear =    &ArrayList_clear;
-	list->release=   (list == NULL) ? &ArrayList_releaseSelf : &ArrayList_release;
-	
-	list->type = ArrayList;
-	list->arrayListData.elements = NULL;
-	list->arrayListData.capacity = 0;
-	list->arrayListData.length = 0;
-	return result;
 }

@@ -1,21 +1,24 @@
 #include <stdlib.h> //For malloc, free
-#include "list-priv.h"
+
+#include "list.h"
+
+//LinkedList internal methods
+static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key);
+
+//LinkedList methods
+static size_t LinkedList_add     (List* list, void* value) __attribute__ ((nonnull (1)));
+static void*  LinkedList_set     (List* list, size_t index, void* value) __attribute__ ((nonnull (1)));
+static void*  LinkedList_get     (List* list, size_t index) __attribute__ ((nonnull (1)));
+static void*  LinkedList_remove  (List* list, size_t index) __attribute__ ((nonnull (1)));
+static Iterator* LinkedList_iterator(List* list) __attribute__ ((nonnull (1)));
+static size_t LinkedList_size    (List* list) __attribute__ ((nonnull (1)));
+static void   LinkedList_clear   (List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
+static void   LinkedList_release (List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
+
 
 /**
- * Get either the node with the given key, or the one immediately before where it should be
- * Returns null if no such node exists (no nodes exist)
+ * Initialize LinkedList
  */
-static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key) {
-	if (head == NULL)
-		return NULL;
-	if (head->key > key)
-		return head->prev;
-	DoublyLinkedKeyedNode* current = head;
-	while ((current->key < key) && (current->next != head))
-		current = current->next;
-	return current;
-}
-
 List* LinkedList_create(List* list) {
 	List* result = list;
 	if (result == NULL) {
@@ -41,7 +44,23 @@ List* LinkedList_create(List* list) {
 	return result;
 }
 
-size_t LinkedList_add(List* list, void* value) {
+/**
+ * (internal)
+ * Get either the node with the given key, or the one immediately before where it should be
+ * Returns null if no such node exists (no nodes exist)
+ */
+static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key) {
+	if (head == NULL)
+		return NULL;
+	if (head->key > key)
+		return head->prev;
+	DoublyLinkedKeyedNode* current = head;
+	while ((current->key < key) && (current->next != head))
+		current = current->next;
+	return current;
+}
+
+static size_t LinkedList_add(List* list, void* value) {
 	if (value == NULL)
 		return list->linkedListData.numNodes;
 	DoublyLinkedKeyedNode* current = malloc(sizeof(DoublyLinkedKeyedNode));
@@ -67,7 +86,7 @@ size_t LinkedList_add(List* list, void* value) {
 	list->linkedListData.numNodes++;
 }
 
-void* LinkedList_set(List* list, size_t index, void* value) {
+static void* LinkedList_set(List* list, size_t index, void* value) {
 	if (value == NULL)
 		return LinkedList_remove(list, index);
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
@@ -106,14 +125,14 @@ void* LinkedList_set(List* list, size_t index, void* value) {
 	}
 }
 
-void* LinkedList_get(List* list, size_t index) {
+static void* LinkedList_get(List* list, size_t index) {
 	DoublyLinkedKeyedNode* node = getNodeImmediatelyLEQ(list->linkedListData.head, index);
 	if (node != NULL && node->key == index)
 		return node->value;
 	return NULL;
 }
 
-void* LinkedList_remove(List* list, size_t index) {
+static void* LinkedList_remove(List* list, size_t index) {
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
 	DoublyLinkedKeyedNode* node = getNodeImmediatelyLEQ(head, index);
 	if (node == NULL || node->key != index)
@@ -132,17 +151,17 @@ void* LinkedList_remove(List* list, size_t index) {
 	return result;
 }
 
-Iterator* LinkedList_iterator(List* list) {
+static Iterator* LinkedList_iterator(List* list) {
 	//TODO finish
 	((void)list);
 	return NULL;
 }
 
-size_t LinkedList_size(List* list) {
+static size_t LinkedList_size(List* list) {
 	return list->linkedListData.head != NULL ? list->linkedListData.head->prev->key : 0;
 }
 
-void LinkedList_clear(List* list, Consumer* cleaner) {
+static void LinkedList_clear(List* list, Consumer* cleaner) {
 	list->linkedListData.numNodes = 0;
 	DoublyLinkedKeyedNode* head = list->linkedListData.head;
 	if (head == NULL)
@@ -160,7 +179,7 @@ void LinkedList_clear(List* list, Consumer* cleaner) {
 	}
 }
 
-void LinkedList_release(List* list, Consumer* cleaner) {
+static void LinkedList_release(List* list, Consumer* cleaner) {
 	LinkedList_clear(list, cleaner);
 	free(list);
 }
