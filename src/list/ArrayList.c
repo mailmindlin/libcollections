@@ -20,9 +20,9 @@ static void*  ArrayList_get     (List* list, size_t index) __attribute__ ((nonnu
 static void*  ArrayList_remove  (List* list, size_t index) __attribute__ ((nonnull (1)));
 static Iterator* ArrayList_iterator(List* list) __attribute__ ((nonnull (1)));
 static size_t ArrayList_size    (List* list) __attribute__ ((nonnull (1)));
-static void   ArrayList_clear   (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
-static void   ArrayList_release (List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
-static void   ArrayList_releaseSelf(List* list, Cleaner* cleaner) __attribute__ ((nonnull (1)));
+static void   ArrayList_clear   (List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
+static void   ArrayList_release (List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
+static void   ArrayList_releaseSelf(List* list, Consumer* cleaner) __attribute__ ((nonnull (1)));
 
 
 /**
@@ -204,7 +204,7 @@ static void ArrayList_clear(List* list, Consumer* cleaner) {
 /**
  * Release all elements and internal memory
  */
-static void ArrayList_release(List* list, Cleaner* cleaner) {
+static void ArrayList_release(List* list, Consumer* cleaner) {
 	ArrayList_clear(list, cleaner);
 	free(list->arrayListData.elements);
 	list->arrayListData.elements = NULL;
