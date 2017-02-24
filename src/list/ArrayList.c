@@ -11,7 +11,7 @@ static void ArrayList_shrink(List* list) __attribute__ ((nonnull (1)));
 //Arraylist iterator methods
 static bool ArrayList_iterator_hasNext(Iterator* self) __attribute__ ((nonnull (1)));
 static void* ArrayList_iterator_next(Iterator* self) __attribute__ ((nonnull (1)));
-static static void* ArrayList_iterator_remove(Iterator* self) __attribute__ ((nonnull (1)));
+static void* ArrayList_iterator_remove(Iterator* self) __attribute__ ((nonnull (1)));
 
 //ArrayList public methods
 static size_t ArrayList_add     (List* list, void* value) __attribute__ ((nonnull (1)));
@@ -153,7 +153,7 @@ static void* ArrayList_iterator_next(Iterator* self) {
 /**
  * (Used for iterator) removes the current element from this list.
  */
-static static void* ArrayList_iterator_remove(Iterator* self) {
+static void* ArrayList_iterator_remove(Iterator* self) {
 	size_t nextIdx = self->privI[0];
 	if (nextIdx == 0)
 		return NULL;//Before first element
