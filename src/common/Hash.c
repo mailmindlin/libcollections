@@ -1,13 +1,15 @@
-#include "Hash.h"
-#include "xxhash.h"
 #include <stdlib.h>//For malloc, free
 
+#include "../locality.h"//Mostly for UNUSED macro
+#include "Hash.h"
+#include "xxhash.h"
+
 static void release_noop(void* p) {
-	((void)p);
+	UNUSED(p);
 }
 
 static unsigned long Identity_apply(void* p, void* v) {
-	((void)p);
+	UNUSED(p);
 	return (unsigned long) v;
 }
 
@@ -19,7 +21,7 @@ IntFunction* Identity_init(IntFunction* fn) {
 }
 
 static unsigned long StringHash_apply(void* p, void* v) {
-	((void)p);
+	UNUSED(p);
 	if (v == NULL)
 		return 0;
 	char c;

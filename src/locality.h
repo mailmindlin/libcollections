@@ -30,4 +30,9 @@
 #define WEAKREF(fn) __attribute__ ((weak, alias(#fn)))
 #endif
 
+//Unused parameter macro
+#ifndef UNUSED
+#define UNUSED(x) ((void(x))
+#endif
+
 #endif

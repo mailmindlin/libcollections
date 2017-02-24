@@ -1,9 +1,12 @@
 #include <errno.h>
 #include <stdlib.h>
+
+#include "../locality.h"
 #include "iterator.h"
 
 static bool Iterator_removeFail(Iterator* iterator) __attribute__ ((nonnull (1)));
 static void Iterator_releaseSelf(Iterator* iterator) __attribute__ ((nonnull (1)));
+
 /**
  * ArrayIterator:
  * privP = pointer to array
@@ -11,6 +14,7 @@ static void Iterator_releaseSelf(Iterator* iterator) __attribute__ ((nonnull (1)
  * privI[1] = array length
  */
 static bool Iterator_removeFail(Iterator* iterator) {
+	UNUSED(iterator);
 	errno = ENOTSUP;
 	return false;
 }

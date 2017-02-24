@@ -1,14 +1,15 @@
 #include <stdlib.h> //malloc, free
 #include <string.h> //For strcmp, memcmp
 
+#include "../locality.h"//Mostly for UNUSED macro
 #include "Comparators.h"
 
 static void release_noop(void* p) {
-	((void)p);
+	UNUSED(p);
 }
 
 static int PointerComparator_apply(void* p, const void* a, const void* b) {
-	((void)p);//Suppress unused parameter warnings
+	UNUSED(p);
 	unsigned long aVal = (unsigned long) a;
 	unsigned long bVal = (unsigned long) b;
 	if (aVal > bVal)
@@ -47,7 +48,7 @@ Comparator* FixedLengthValueComparator_init(Comparator* comparator, size_t lengt
 }
 
 static int StringComparator_apply(void* p, const void* a, const void* b) {
-	((void)p);//Suppress unused parameter warnings
+	UNUSED(p);
 	if (a == b)
 		return 0;
 	if (a == NULL)

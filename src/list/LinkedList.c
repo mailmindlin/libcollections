@@ -152,8 +152,8 @@ static void* LinkedList_remove(List* list, size_t index) {
 }
 
 static Iterator* LinkedList_iterator(List* list) {
+	UNUSED(list);
 	//TODO finish
-	((void)list);
 	return NULL;
 }
 
