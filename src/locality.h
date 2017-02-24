@@ -32,7 +32,7 @@
 
 //Unused parameter macro
 #ifndef UNUSED
-#define UNUSED(x) ((void(x))
+#define UNUSED(x) (void(x))
 #endif
 
 #endif
