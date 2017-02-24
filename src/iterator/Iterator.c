@@ -3,7 +3,7 @@
 #include "iterator.h"
 
 static bool Iterator_removeFail(Iterator* iterator) __attribute__ ((nonnull (1)));
-static void* Iterator_releaseSelf(Iterator* iterator) __attribute__ ((nonnull (1)));
+static void Iterator_releaseSelf(Iterator* iterator) __attribute__ ((nonnull (1)));
 /**
  * ArrayIterator:
  * privP = pointer to array
