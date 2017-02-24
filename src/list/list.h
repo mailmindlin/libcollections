@@ -1,9 +1,10 @@
 #include <stdbool.h>//For bool
 #include <stddef.h>//For size_t
-#include "../collections.h"
+#include "../collections.h"//CollectionType
 #include "../locality.h"
-#include "../iterator/iterator.h"
-#include "../common/LinkedNode.h"
+#include "../iterator/iterator.h"//Iterator
+#include "../common/Functions.h"//Consumer
+#include "../common/LinkedNode.h"//DoublyLinkedKeyedNode
 #ifndef __LIBCOLLECTIONS_LIST_H
 #define __LIBCOLLECTIONS_LIST_H
 
