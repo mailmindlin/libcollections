@@ -11,6 +11,6 @@
 
 LIBCOLLECTIONS_PUBLIC IntFunction* Identity_init(IntFunction* fn);
 LIBCOLLECTIONS_PUBLIC IntFunction* StringHash_init(IntFunction* fn);
-LIBCOLLECTIONS_PUBLIC IntFunction* FixedXXH_init(IntFunction* fn, size_t structSize);
+LIBCOLLECTIONS_PUBLIC IntFunction* FixedXXH_init(IntFunction* fn, unsigned long seed, size_t structSize);
 
 #endif //__LIBCOLLECTIONS_HASH_H
