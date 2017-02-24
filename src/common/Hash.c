@@ -25,7 +25,7 @@ static unsigned long StringHash_apply(void* p, void* v) {
 	char c;
 	unsigned long result = 0;
 	for (char* str = (char*) v; c = *str; str++)
-		result = result * 31 + c;
+		result = result * 31 + ((unsigned long) c);
 	return result;
 }
 
@@ -46,15 +46,14 @@ static unsigned long FixedXXH_apply(void* priv, void* value) {
 		return 0;
 	struct FixedXXH_data* data = (struct FixedXXH_data*) priv;
 	//XXH64 is over 2x as fast as XXH32 on 64-bit machines (as could be expected), but is MUCH slower on 32-bit computers (1/3x).
-	#if sizeof(unsigned long) >= 8
+	if (sizeof(unsigned long) >= 8)
 		return (unsigned long) XXH64(value, data->length, (unsigned long long) data->seed);
-	#else
+	else
 		return (unsigned long) XXH32(value, data->length, (unsigned int) data->seed);
-	#endif
 }
 
 IntFunction* FixedXXH_init(IntFunction* fn, unsigned long seed, size_t structSize) {
-	if ((fn->priv = malloc(sizeof(FixedXXH_data))) == NULL)
+	if ((fn->priv = malloc(sizeof(struct FixedXXH_data))) == NULL)
 		return NULL;
 	((struct FixedXXH_data*)fn->priv)->seed = seed;
 	((struct FixedXXH_data*)fn->priv)->length = structSize;
