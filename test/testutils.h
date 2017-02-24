@@ -24,7 +24,11 @@ typedef enum TestResult {
 
 #define TEST(testname) TestResult testname() __attribute__((visibility ("default")))
 
-#define ASSERT(pred, msg, ...) do {TestResult r = __test_check((pred), TestResult_PASS, TestResult_FAIL, __FILE__, __LINE__, } while(0);
+#define ASSERT(pred, msg, ...) \
+		do {\
+			TestResult r = __test_check((pred), TestResult_PASS, TestResult_FAIL, __FILE__, __LINE__, msg, __VA_ARGS);\
+			if (r != TestResult_PASS)return r;\
+		} while(0);
 
 #define FAIL(message, ...) do {return TestResult_FAIL;}
 
