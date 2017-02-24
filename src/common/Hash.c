@@ -24,7 +24,7 @@ static unsigned long StringHash_apply(void* p, void* v) {
 		return 0;
 	char c;
 	unsigned long result = 0;
-	for (char* str = (char*) v; (c = *str) != NULL; str++)
+	for (char* str = (char*) v; (c = *str) != '\0'; str++)
 		result = result * 31 + ((unsigned long) c);
 	return result;
 }
