@@ -96,17 +96,23 @@ static void ArrayList_shrink(List* list) {
 
 static size_t ArrayList_add(List* list, void* value) {
 	size_t index = list->arrayListData.length + 1;
-	ArrayList_set(list, index, value);
-	if (list->arrayListData.length != index)
+	ArrayList_grow(list, index);
+	if (list->arrayListData.length < index)
 		//Fail
 		return -1u;
+	list->arrayListData.elements[index] = value;
 	return index;
 }
 
 static void* ArrayList_set(List* list, size_t index, void* value) {
 	if (value == NULL)
 		return ArrayList_remove(list, index);
-	return NULL;//TODO finish
+	ArrayList_grow(list, index);
+	if (index > list->arrayListData.capacity)
+		return NULL;//fail
+	void* result = list->arrayListData.elements[index];
+	list->arrayListData.elements[index] = value;
+	return result;
 }
 
 static void* ArrayList_get(List* list, size_t index) {
