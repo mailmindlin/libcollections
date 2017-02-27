@@ -2,6 +2,10 @@
 #include <errno.h> //For, well, errno & values
 #include "list.h"
 
+/*
+ * File contains implementation of a doubly linked list.
+ */
+
 //LinkedList internal methods
 static DoublyLinkedKeyedNode* getNodeImmediatelyLEQ(DoublyLinkedKeyedNode* head, size_t key);
 
