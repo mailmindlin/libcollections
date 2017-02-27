@@ -16,4 +16,4 @@ matrix:
       compiler: clang
       env: COMPILER=clang
 script:
-  make CC=$COMPILER all
+  make --keep-going CC=$COMPILER all
