@@ -48,7 +48,15 @@ typedef struct Set {
 } Set;
 
 LIBCOLLECTIONS_PUBLIC Set* BitSet_create(Set* set, IntFunction* hashFn, int min, int max) __attribute__ ((nonnull (1, 2)));
-LIBCOLLECTIONS_PUBLIC Set* HashSet_create(Set* set, IntFunction* hashFn) __attribute__ ((nonnull (1, 2)));
+/**
+ * Create a HashSet.
+ * @param set
+ * @param hashFn
+ * @param comparator
+ *         Comparator for two elements of the set. If null, a comparator will be created (probably PointerComparator)
+ *         This comparator will be released when the set is released.
+ */
+LIBCOLLECTIONS_PUBLIC Set* HashSet_create(Set* set, IntFunction* hashFn, Comparator* comparator) __attribute__ ((nonnull (1, 2)));
 LIBCOLLECTIONS_PUBLIC Set* TreeSet_create(Set* set, Comparator* comparator) __attribute__ ((nonnull (1, 2)));
 
 
