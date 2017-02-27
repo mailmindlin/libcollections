@@ -1,6 +1,7 @@
+#include <stdlib.h> //malloc, free
+
 #include "Set.h"
 #include "../common/Functions.h"
-#include <stdlib.h> //malloc, free
 
 #define HASHSET_INITIAL_CAPACITY  (1 << 4)
 #define HASHSET_MAXIMUM_CAPACITY  (1 << 30)
@@ -13,12 +14,12 @@ struct TreeNodeData {
 	/**
 	 * All guaranteed to be a tree node (if not null)
 	 */
-	HashSetNode* before;
-	HashSetNode* after;
-	HashSetNode* parent;
-	HashSetNode* left;
-	HashSetNode* right;
-	HashSetNode* prev;
+	struct HashSetNode* before;
+	struct HashSetNode* after;
+	struct HashSetNode* parent;
+	struct HashSetNode* left;
+	struct HashSetNode* right;
+	struct HashSetNode* prev;
 	bool red;
 };
 
