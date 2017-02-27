@@ -2,6 +2,7 @@
 
 #include "Set.h"
 #include "../common/Functions.h"
+#include "../common/Compartors.h"//PointerComparator
 
 #define HASHSET_INITIAL_CAPACITY  (1 << 4)
 #define HASHSET_MAXIMUM_CAPACITY  (1 << 30)
