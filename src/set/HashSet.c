@@ -57,6 +57,26 @@ struct HashSetData {
 	unsigned short modCount;
 };
 
+//Declared in Set.h
+//Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator);
+
+//Internal methods
+static struct HashSetNode* treeNodeFind(struct HashSetNode* root, Comparator* comparator, unsigned long hash, void* value) __attribute__ ((warn_unused_result, nonnull (1, 2)));
+static struct HashSetNode* getTreeRoot(struct HashSetNode* base) __attribute__ ((warn_unused_result, nonnull (1)));
+static struct HashSetNode* getNode(struct HashSetData* data, unsigned long hash, void* value) __attribute__ ((warn_unused_result, nonnnull (1)));
+static bool HashSet_maybeResize(struct HashSetData* data) __attribute__ ((nonnnull (1)));
+
+//HashSet methods
+static bool      HashSet_add        (Set* self, void* value)      __attribute__ ((nonnull (1)));
+static bool      HashSet_contains   (Set* self, void* value)      __attribute__ ((nonnull (1)));
+static void*     HashSet_remove     (Set* self, void* value)      __attribute__ ((nonnull (1)));
+static size_t    HashSet_getSize    (Set* self)                   __attribute__ ((nonnull (1)));
+static Iterator* HashSet_iterator   (Set* self)                   __attribute__ ((nonnull (1)));
+static void      HashSet_clear      (Set* self, Consumer* cleaner)__attribute__ ((nonnull (1)));
+static void      HashSet_release    (Set* self)                   __attribute__ ((nonnull (1)));
+static void      HashSet_releaseSelf(Set* self)                   __attribute__ ((nonnull (1)));
+
+
 Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator) {
 	Set* result = input;
 	if (result == NULL && (result = malloc(sizeof(Set))) == NULL) {
