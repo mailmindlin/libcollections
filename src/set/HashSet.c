@@ -105,6 +105,11 @@ Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator) {
 	data->length = 0;
 	data->capacity = 0;
 	data->resizeThreshold = 0;
+	if (comparator != NULL)
+		data->comparator = *comparator;
+	else
+		//No comparator was supplied, so create our own
+		PointerComparator_init(&data->comparator);
 	
 	return set;
 }
