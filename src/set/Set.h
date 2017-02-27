@@ -3,7 +3,7 @@
 #include "../collections.h"
 #include "../locality.h"
 #include "../iterator/iterator.h"
-#inclde "../common/Functions.h"
+#include "../common/Functions.h"
 
 #ifndef __LIBCOLLECTIONS_LIST_H
 #define __LIBCOLLECTIONS_LIST_H
