@@ -78,16 +78,19 @@ static void      HashSet_releaseSelf(Set* self)                   __attribute__ 
 
 
 Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator) {
-	Set* result = input;
-	if (result == NULL && (result = malloc(sizeof(Set))) == NULL) {
+	Set* set = input;
+	if (set == NULL && (set = malloc(sizeof(Set))) == NULL) {
 		return NULL;
 	}
-	if ((result->priv = malloc(sizeof(struct HashSetData))) == NULL) {
+	//Try to allocate internal data
+	if ((set->priv = malloc(sizeof(struct HashSetData))) == NULL) {
+		//Alloc failed; free Set datastructure if we allocated it
 		if (input == NULL)
-			free(result);
+			free(set);
 		return NULL;
 	}
 	
+	//Set up (punny :)) public methods
 	set->add = &HashSet_add;
 	set->contains = &HashSet_contains;
 	set->remove = &HashSet_remove;
@@ -96,13 +99,14 @@ Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator) {
 	set->clear = &HashSet_clear;
 	set->release = input == NULL ? &HashSet_releaseSelf : &HashSet_release;
 	
-	struct HashSetData* data = (struct HashSetData*) result->priv;
+	//Initialize internal data
+	struct HashSetData* data = (struct HashSetData*) set->priv;
 	data->table = NULL;
 	data->length = 0;
 	data->capacity = 0;
 	data->resizeThreshold = 0;
 	
-	return result;
+	return set;
 }
 
 static struct HashSetNode* treeNodeFind(struct HashSetNode* root, Comparator* comparator, unsigned long hash, void* value) {
