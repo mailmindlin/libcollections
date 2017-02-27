@@ -1,5 +1,5 @@
 #include <stdlib.h> //For malloc, free
-
+#include <errno.h> //For, well, errno & values
 #include "list.h"
 
 //LinkedList internal methods
@@ -84,6 +84,7 @@ static size_t LinkedList_add(List* list, void* value) {
 	current->next = head;
 	current->key = current->prev->key + 1;
 	list->linkedListData.numNodes++;
+	return current->key;
 }
 
 static void* LinkedList_set(List* list, size_t index, void* value) {
@@ -94,7 +95,7 @@ static void* LinkedList_set(List* list, size_t index, void* value) {
 	if (prev == NULL || prev->key != index) {
 		//Miss (add new entry)
 		DoublyLinkedKeyedNode* current = malloc(sizeof(DoublyLinkedKeyedNode));
-		current->key = index;
+		current->key = (unsigned int) index;
 		current->value = value;
 		if (prev == NULL || index < head->key) {
 			if (prev == NULL) {
