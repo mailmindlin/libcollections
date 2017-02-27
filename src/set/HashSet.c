@@ -105,6 +105,7 @@ Set* HashSet_create(Set* input, IntFunction* hashFn, Comparator* comparator) {
 	data->length = 0;
 	data->capacity = 0;
 	data->resizeThreshold = 0;
+	data->hashFn = *hashFn;
 	if (comparator != NULL)
 		data->comparator = *comparator;
 	else
@@ -151,7 +152,7 @@ static struct HashSetNode* getTreeRoot(struct HashSetNode* base) {
 }
 
 static struct HashSetNode* getNode(struct HashSetData* data, unsigned long hash, void* value) {
-	const struct HashSetNode* table = data->table;
+	const struct HashSetNode** table = data->table;
 	if (table == NULL)
 		return NULL;
 	const size_t capacity = data->capacity;
@@ -182,7 +183,7 @@ static bool HashSet_maybeResize(struct HashSetData* data) {
 	const size_t length = data->length;
 	if (length < oldThreshold)
 		return true;
-	size_t newCapacity
+	size_t newCapacity;
 	size_t newThreshold = 0;
 	if (oldCapacity > 0) {
 		if (oldCapacity > HASHSET_MAXIMUM_CAPACITY) {
@@ -213,9 +214,10 @@ static bool HashSet_maybeResize(struct HashSetData* data) {
 			if (current->next == NULL) {
 				newTable[(newCapacity - 1) & current->hash] = current;
 			} else if (current->isTreeNode) {
+				//See HashMap.TreeNode.split
 				//Relink tree nodes into low and high lists
 				//This operation preserves the order of the nodes
-				struct HashSetNode* next;
+				struct HashSetNode* next;//Is TreeNode
 				struct HashSetNode* loHead = NULL;
 				struct HashSetNode* loTail = NULL;
 				struct HashSetNode* hiHead = NULL;
@@ -223,8 +225,8 @@ static bool HashSet_maybeResize(struct HashSetData* data) {
 				//Store the size of both of the lists, so we can know whether to un-treeify them
 				int loCount = 0, hiCount = 0;
 				for (; current != NULL; current = next) {
-					next = current->tree[0].next;
-					current->tree[0].next = NULL;
+					next = current->next;
+					current->next = NULL;
 					if ((current->hash & oldCapacity) == 0) {
 						if ((current->tree[0].prev = loTail) == NULL)
 							loHead = current;
@@ -243,22 +245,25 @@ static bool HashSet_maybeResize(struct HashSetData* data) {
 				}
 				
 				if (loHead != NULL) {
-					if (loCount <= HASHSET_UNTREE_THRESHOLD)
+					//TODO finish
+					/*if (loCount <= HASHSET_UNTREE_THRESHOLD)
 						newTable[i] = //untreeify loHead
 					else {
 						newTable[i] = loHead;
 						if (hiHead != NULL)
 							//treeify loHead
-					}
+					}*/
 				}
 				if (hiHead != NULL) {
+					//TODO finish
+					/*
 					if (hiCount <= HASHSET_UNTREE_THRESHOLD)
 						newTable[i + oldCapacity] = //untreeify hiHead
 					else {
 						newTable[i + oldCapacity] = hiHead;
 						if (loHead != NULL)
 							//treeify loHead
-					}
+					}*/
 				}
 			} else {
 				//Linked list of nodes that had different hashes that were previously masked
@@ -279,7 +284,7 @@ static bool HashSet_maybeResize(struct HashSetData* data) {
 						if (hiTail == NULL)
 							hiHead = current;
 						else
-							hiTail.next = current;
+							hiTail->next = current;
 						hiTail = current;
 					}
 				} while ((current = next) != NULL);
@@ -305,7 +310,7 @@ bool HashSet_add(Set* self, void* value) {
 	if (table == NULL || capacity == 0)
 		HashSet_maybeResize(data);
 	
-	const unsigned long hash = data->hashFn->apply(data->hashFn->priv, value);
+	const unsigned long hash = data->hashFn.apply(data->hashFn.priv, value);
 	
 	struct HashSetNode* first = table[(capacity - 1) & hash];
 	if (first == NULL) {
