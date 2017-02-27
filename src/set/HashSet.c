@@ -334,7 +334,7 @@ bool HashSet_add(Set* self, void* value) {
 
 bool HashSet_contains(Set* self, void* value) {
 	struct HashSetData* data = (struct HashSetData*) self->priv;
-	unsigned long hash = data->hashFn->apply(data->hashFn->priv, value);
+	unsigned long hash = data->hashFn.apply(data->hashFn.priv, value);
 	return getNode(data, hash, value) != NULL;
 }
 
