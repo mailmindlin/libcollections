@@ -137,10 +137,15 @@ static struct HashSetNode* treeNodeFind(struct HashSetNode* root, Comparator* co
 	return NULL;
 }
 
+/**
+ * Get the root for a TreeNode
+ * @param base Node to find tree root of.
+ *       Precondition: base is a TreeNode
+ */
 static struct HashSetNode* getTreeRoot(struct HashSetNode* base) {
 	struct HashSetNode* current = base;
 	struct HashSetNode* parent;
-	while ((parent = current->parent) != NULL)
+	while ((parent = current->tree[0].parent) != NULL)
 		current = parent;
 	return current;
 }
